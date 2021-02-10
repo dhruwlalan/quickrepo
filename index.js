@@ -2,13 +2,19 @@
 
 const { program } = require('commander');
 const chalk = require('chalk');
-const files = require('./lib/files');
 const github = require('./lib/github');
+const inquirer = require('./lib/inquirer');
+const createRepo = require('./lib/createRepo');
 
 program
    .command('init')
    .description('create repository')
-   .action(() => {});
+   .action(async () => {
+      // const url = await createRepo.createRemoteRepository();
+      // const res = await createRepo.createLocalRepository(url);
+      const res = await createRepo.createLocalRepository();
+      console.log('the end');
+   });
 
 program
    .command('register')
