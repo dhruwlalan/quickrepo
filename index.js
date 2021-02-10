@@ -3,15 +3,14 @@
 const { program } = require('commander');
 const chalk = require('chalk');
 const github = require('./lib/github');
-const createRepo = require('./lib/createRepo');
 
 program
    .command('init')
    .description('create repository')
    .action(async () => {
       try {
-         const url = await createRepo.createRemoteRepository();
-         const res = await createRepo.createLocalRepository(url);
+         const url = await github.createRemoteRepository();
+         const res = await github.createLocalRepository(url);
          console.log(chalk.green.bold('Created repository successfully!'));
       } catch (error) {
          console.log(chalk.red.bold(error.message));
