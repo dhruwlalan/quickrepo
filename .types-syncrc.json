@@ -1,0 +1,12 @@
+{
+   "dependencies": ["node"],
+   "ignore": [
+      "rimraf",
+      "prettier",
+      "eslint",
+      "eslint-config-prettier",
+      "eslint-plugin-prettier"
+   ],
+   "packageManager": "pnpm",
+   "removeUnused": true
+}
