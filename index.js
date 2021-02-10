@@ -3,17 +3,20 @@
 const { program } = require('commander');
 const chalk = require('chalk');
 const github = require('./lib/github');
-const inquirer = require('./lib/inquirer');
 const createRepo = require('./lib/createRepo');
 
 program
    .command('init')
    .description('create repository')
    .action(async () => {
-      // const url = await createRepo.createRemoteRepository();
-      // const res = await createRepo.createLocalRepository(url);
-      const res = await createRepo.createLocalRepository();
-      console.log('the end');
+      try {
+         const url = await createRepo.createRemoteRepository();
+         const res = await createRepo.createLocalRepository(url);
+         // const res = await createRepo.createLocalRepository();
+         console.log(chalk.green.bold('the end'));
+      } catch (error) {
+         console.log(chalk.red.bold(error.message));
+      }
    });
 
 program
@@ -22,9 +25,9 @@ program
    .action(async () => {
       const token = await github.setToken();
       if (token) {
-         console.log(chalk.green.bold('stored token successfully!'));
+         console.log(chalk.green.bold('Stored token successfully!'));
       } else {
-         console.log(chalk.red.bold('unable to store token!'));
+         console.log(chalk.red.bold('Unable to store the token!'));
       }
    });
 
@@ -39,7 +42,7 @@ program
       const user = await github.checkToken(token);
       console.log(chalk.white.bold('token\t-> ') + chalk.blue.bold(token));
       console.log(chalk.white.bold('user\t-> ') + chalk.blue.bold(user.login));
-      console.log(chalk.green.bold('the stored token is valid!'));
+      console.log(chalk.green.bold('The stored personal access token is valid!'));
    });
 
 program.version('1.0.0', '-v, --version', 'output the current version');
