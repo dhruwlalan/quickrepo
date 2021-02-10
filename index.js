@@ -12,8 +12,7 @@ program
       try {
          const url = await createRepo.createRemoteRepository();
          const res = await createRepo.createLocalRepository(url);
-         // const res = await createRepo.createLocalRepository();
-         console.log(chalk.green.bold('the end'));
+         console.log(chalk.green.bold('Created repository successfully!'));
       } catch (error) {
          console.log(chalk.red.bold(error.message));
       }
