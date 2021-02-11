@@ -5,10 +5,11 @@
    "main": "index.js",
    "preferGlobal": true,
    "bin": {
-      "quickrepo": "index.js"
+      "quickrepo": "src/index.js",
+      "qr": "src/index.js"
    },
    "scripts": {
-      "start": "node index.js init"
+      "start": "node ./src/index.js init"
    },
    "keywords": [],
    "author": "dhruw",
@@ -24,6 +25,7 @@
       "eslint-plugin-import": "^2.22.1",
       "eslint-plugin-prettier": "^3.3.1",
       "inquirer": "^7.3.3",
+      "ora": "^5.3.0",
       "prettier": "^2.2.1",
       "simple-git": "^2.34.2"
    }

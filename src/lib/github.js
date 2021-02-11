@@ -1,7 +1,7 @@
 const { Octokit } = require('@octokit/rest');
 const ConfigStore = require('configstore');
 const simpleGit = require('simple-git');
-const pkg = require('../package.json');
+const pkg = require('../../package.json');
 const inquirer = require('./inquirer');
 const files = require('./files');
 
