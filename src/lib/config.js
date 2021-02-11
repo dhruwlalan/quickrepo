@@ -1,6 +1,5 @@
 const ConfigStore = require('configstore');
 const pkg = require('../../package.json');
-const inquirer = require('./inquirer');
 
 const config = new ConfigStore(pkg.name);
 if (!config.has('ranSetup')) config.set('ranSetup', false);
@@ -12,18 +11,10 @@ module.exports = {
    viewConfig() {
       return config.all;
    },
-   async editConfig() {
-      const answers = await inquirer.askEditConfig();
-      if (answers.autoCommit !== 'no') {
-         this.setAutoCommit(true);
-         this.setAutoCommitMessage(answers.autoCommitMessage);
-      } else {
-         this.setAutoCommit(false);
-         this.setAutoCommitMessage(answers.autoCommitMessage);
-      }
+   clearConfig() {
+      config.clear();
    },
 
-   // getters & setters:
    ranSetup(completed) {
       if (completed) {
          config.set('ranSetup', true);
@@ -31,6 +22,7 @@ module.exports = {
          return config.get('ranSetup');
       }
    },
+
    getToken() {
       return config.get('token');
    },

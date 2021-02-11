@@ -6,22 +6,6 @@ const inquirer = require('./inquirer');
 const config = require('./config');
 
 module.exports = {
-   // Token stuff...
-   async addToken() {
-      const { newToken } = await inquirer.askNewToken();
-      if (newToken) {
-         config.setToken(newToken);
-         return true;
-      }
-      return false;
-   },
-   // async verifyToken(token) {
-   //    const octokit = new Octokit({
-   //       auth: token,
-   //    });
-   //    const { data } = await octokit.request('/user');
-   //    return data;
-   // },
    // Repo Stuff..
    // async createRemoteRepository() {
    //    if (info.isGitRepo) {

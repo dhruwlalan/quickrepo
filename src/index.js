@@ -2,12 +2,14 @@
 
 const { program } = require('commander');
 const chalk = require('chalk');
-const github = require('./lib/github');
-const config = require('./lib/config');
 const setup = require('./lib/setup');
+const editConfig = require('./lib/editConfig');
+const config = require('./lib/config');
+const token = require('./lib/token');
+const github = require('./lib/github');
 const info = require('./lib/info');
 
-// setup quickrepo, will run only once until re-runed
+// app setup
 program
    .command('setup')
    .description('initial basic app setup')
@@ -17,13 +19,36 @@ program
             console.log(chalk.blue.bold('you have already ran the setup!'));
             const rerun = await setup.rerunSetup();
             if (rerun) {
-               await setup.appSetup();
-               console.log(chalk.green.bold('setup complete!'));
+               const res = await token.addToken();
+               if (res) {
+                  await editConfig.editConfig();
+                  console.log(chalk.green.bold('✔ setup complete!'));
+               } else {
+                  console.log(chalk.red.bold('✖ aborting setup!'));
+               }
+            } else {
+               console.log(chalk.red.bold('✖ discarding setup!'));
             }
          } else {
-            await setup.appSetup();
-            console.log(chalk.green.bold('setup complete!'));
+            const res = await token.addToken();
+            if (res) {
+               await editConfig.editConfig();
+               console.log(chalk.green.bold('✔ setup complete!'));
+            } else {
+               console.log(chalk.red.bold('✖ aborting setup!'));
+            }
          }
+      } catch (error) {
+         console.log(chalk.red.bold(error.message));
+      }
+   });
+program
+   .command('reset')
+   .description('reset app')
+   .action(async () => {
+      try {
+         config.clearConfig();
+         console.log(chalk.green.bold('✔ config cleared successfully!'));
       } catch (error) {
          console.log(chalk.red.bold(error.message));
       }
@@ -52,25 +77,31 @@ program
    .description('edit app config')
    .action(async () => {
       try {
-         await config.editConfig();
+         await editConfig.editConfig();
          console.log(chalk.green.bold('edited config successfully!'));
       } catch (error) {
          console.log(chalk.red.bold(error.message));
       }
    });
-// github personal access token
+// token stuff
 program
    .command('add-token')
    .description('add new github personal access token')
    .action(async () => {
-      const token = await github.addToken();
-      if (token) {
-         console.log(chalk.green.bold('new token added successfully!'));
+      await token.addToken();
+   });
+program
+   .command('verify-token')
+   .description('verify github personal access token')
+   .action(async () => {
+      const user = await token.verifyToken();
+      if (user) {
+         console.log(chalk.green.bold('token is valid'));
       } else {
-         console.log(chalk.red.bold('unable to add the token!'));
+         console.log(chalk.red.bold('token is invalid'));
       }
    });
-// create repository
+// repo stuff
 program
    .command('init')
    .description('create repository')
@@ -83,21 +114,6 @@ program
       } catch (error) {
          console.log(chalk.red.bold(error.message));
       }
-   });
-
-// check for a valid token
-program
-   .command('check')
-   .description('check for a valid token')
-   .action(async () => {
-      const token = github.getToken();
-      if (!token) {
-         console.log('no token available, please register.');
-      }
-      const user = await github.checkToken(token);
-      console.log(chalk.white.bold('token\t-> ') + chalk.blue.bold(token));
-      console.log(chalk.white.bold('user\t-> ') + chalk.blue.bold(user.login));
-      console.log(chalk.green.bold('The stored personal access token is valid!'));
    });
 
 // current versiion of app
