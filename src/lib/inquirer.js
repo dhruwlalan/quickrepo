@@ -2,7 +2,8 @@ const inquirer = require('inquirer');
 const info = require('./info');
 
 module.exports = {
-   askGithubToken() {
+   // App Setup...
+   askAppSetup() {
       return inquirer.prompt([
          {
             name: 'token',
@@ -15,9 +16,99 @@ module.exports = {
                return 'please enter your personal access token.';
             },
          },
+         {
+            name: 'autoCommit',
+            type: 'list',
+            message: 'do you want to auto commit & push when having contents inside repo:',
+            choices: ['yes', 'no', 'ask each time'],
+            default: 0,
+            validate(value) {
+               if (value.length) {
+                  return true;
+               }
+               return 'please enter your auto commit choice';
+            },
+         },
+         {
+            name: 'autoCommitMessage',
+            type: 'input',
+            message: 'default initial auto commit message:',
+            default: 'Initial Commit',
+            when({ autoCommit }) {
+               return autoCommit !== 'no';
+            },
+            validate(value) {
+               if (value.length) {
+                  return true;
+               }
+               return 'please enter your default initial commit message';
+            },
+         },
+      ]);
+   },
+   askRerunSetup() {
+      return inquirer.prompt([
+         {
+            name: 'rerunSetup',
+            type: 'confirm',
+            message: 'would you like to re-run the setup:',
+            default: false,
+         },
       ]);
    },
 
+   // App config...
+   askEditConfig() {
+      return inquirer.prompt([
+         {
+            name: 'autoCommit',
+            type: 'list',
+            message: 'do you want to auto commit & push when having contents inside repo:',
+            choices: ['yes', 'no', 'ask each time'],
+            default: 0,
+            validate(value) {
+               if (value.length) {
+                  return true;
+               }
+               return 'please enter your auto commit choice';
+            },
+         },
+         {
+            name: 'autoCommitMessage',
+            type: 'input',
+            message: 'default initial auto commit message:',
+            default: 'Initial Commit',
+            when({ autoCommit }) {
+               return autoCommit !== 'no';
+            },
+            validate(value) {
+               if (value.length) {
+                  return true;
+               }
+               return 'please enter your default initial commit message';
+            },
+         },
+      ]);
+   },
+
+   // Token Stuff...
+   askNewToken() {
+      return inquirer.prompt([
+         {
+            name: 'newToken',
+            type: 'input',
+            message: 'add new personal access token:',
+            validate(value) {
+               if (value.length) {
+                  return true;
+               }
+               return 'please enter your personal access token.';
+            },
+         },
+      ]);
+   },
+
+   // Repo Stuff..
    askRemoteRepositoryDetails() {
       return inquirer.prompt([
          {
@@ -47,7 +138,6 @@ module.exports = {
          },
       ]);
    },
-
    askToCreateInitialCommit() {
       return inquirer.prompt([
          {
@@ -64,7 +154,6 @@ module.exports = {
          },
       ]);
    },
-
    askInitialCommitMessage() {
       return inquirer.prompt([
          {
