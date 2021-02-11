@@ -1,6 +1,6 @@
 const { Octokit } = require('@octokit/rest');
 const ConfigStore = require('configstore');
-const simpleGit = require('simple-git');
+const shell = require('shelljs');
 const pkg = require('../../package.json');
 const inquirer = require('./inquirer');
 const info = require('./info');
@@ -49,7 +49,6 @@ module.exports = {
             name: answers.name,
             description: answers.description,
             private: answers.visibility === 'private',
-            auto_init: false,
          });
          return res.data.ssh_url;
       } catch (error) {
@@ -58,31 +57,28 @@ module.exports = {
    },
 
    async createLocalRepository(url) {
-      const git = simpleGit();
-
       if (info.isGitRepo) {
          throw new Error('Current directory is already a git repository!');
       }
-
       if (info.containsContent) {
          try {
-            await git.init();
-            await git.addRemote('origin', url);
+            shell.exec('git init', { silent: true });
+            shell.exec(`git remote add origin ${url}`, { silent: true });
             const { initialCommit } = await inquirer.askToCreateInitialCommit();
             if (initialCommit) {
                const { initialCommitMessage } = await inquirer.askInitialCommitMessage();
-               await git.add('.');
-               await git.commit(initialCommitMessage);
-               await git.branch(['-M', 'master']);
-               await git.push('origin', 'master', ['-u']);
+               shell.exec('git add .', { silent: true });
+               shell.exec(`git commit -m "${initialCommitMessage}"`, { silent: true });
+               shell.exec('git branch -M master', { silent: true });
+               shell.exec('git push -u origin master', { silent: true });
             }
          } catch (error) {
             throw new Error(error.message);
          }
       } else {
          try {
-            await git.init();
-            await git.addRemote('origin', url);
+            shell.exec('git init', { silent: true });
+            shell.exec(`git remote add origin ${url}`, { silent: true });
          } catch (error) {
             throw new Error(error.message);
          }

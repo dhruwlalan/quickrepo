@@ -1,7 +1,7 @@
 {
    "name": "quickrepo",
    "version": "1.0.0",
-   "description": "quickly create & link a repository locally & on github.",
+   "description": "quickly create a repository locally & also host it on github, all via the command line!",
    "main": "index.js",
    "preferGlobal": true,
    "bin": {
@@ -14,20 +14,21 @@
    "keywords": [],
    "author": "dhruw",
    "license": "MIT",
-   "devDependencies": {
+   "dependencies": {
       "@octokit/rest": "^18.1.0",
       "chalk": "^4.1.0",
       "commander": "^7.0.0",
       "configstore": "^5.0.1",
+      "inquirer": "^7.3.3",
+      "ora": "^5.3.0",
+      "shelljs": "^0.8.4"
+   },
+   "devDependencies": {
       "eslint": "^7.19.0",
       "eslint-config-airbnb-base": "^14.2.1",
       "eslint-config-prettier": "^7.2.0",
       "eslint-plugin-import": "^2.22.1",
       "eslint-plugin-prettier": "^3.3.1",
-      "inquirer": "^7.3.3",
-      "ora": "^5.3.0",
-      "prettier": "^2.2.1",
-      "shelljs": "^0.8.4",
-      "simple-git": "^2.34.2"
+      "prettier": "^2.2.1"
    }
 }

@@ -12,6 +12,7 @@ program
       try {
          const url = await github.createRemoteRepository();
          const res = await github.createLocalRepository(url);
+         // const res = await github.createLocalRepository('haha');
          console.log(chalk.green.bold('Created repository successfully!'));
       } catch (error) {
          console.log(chalk.red.bold(error.message));
