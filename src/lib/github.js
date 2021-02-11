@@ -3,7 +3,7 @@ const ConfigStore = require('configstore');
 const simpleGit = require('simple-git');
 const pkg = require('../../package.json');
 const inquirer = require('./inquirer');
-const files = require('./files');
+const info = require('./info');
 
 const config = new ConfigStore(pkg.name);
 
@@ -35,7 +35,7 @@ module.exports = {
    },
 
    async createRemoteRepository() {
-      if (files.isGitRepo(process.cwd())) {
+      if (info.isGitRepo) {
          throw new Error('Current directory is already a git repository!');
       }
       const octokit = new Octokit({
@@ -60,7 +60,11 @@ module.exports = {
    async createLocalRepository(url) {
       const git = simpleGit();
 
-      if (files.containsContent(process.cwd())) {
+      if (info.isGitRepo) {
+         throw new Error('Current directory is already a git repository!');
+      }
+
+      if (info.containsContent) {
          try {
             await git.init();
             await git.addRemote('origin', url);

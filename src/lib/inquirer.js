@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const files = require('./files');
+const info = require('./info');
 
 module.exports = {
    askGithubToken() {
@@ -24,7 +24,7 @@ module.exports = {
             name: 'name',
             type: 'input',
             message: 'name of your repository:',
-            default: files.getCurrentDirectoryBase(),
+            default: info.directoryBase,
             validate(value) {
                if (value.length) {
                   return true;

@@ -3,6 +3,7 @@
 const { program } = require('commander');
 const chalk = require('chalk');
 const github = require('./lib/github');
+require('./lib/info');
 
 program
    .command('init')
