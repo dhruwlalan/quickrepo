@@ -42,17 +42,7 @@ program
          console.log(chalk.red.bold(error.message));
       }
    });
-program
-   .command('reset')
-   .description('reset app')
-   .action(async () => {
-      try {
-         config.clearConfig();
-         console.log(chalk.green.bold('✔ config cleared successfully!'));
-      } catch (error) {
-         console.log(chalk.red.bold(error.message));
-      }
-   });
+
 // app config
 program
    .command('view-config')
@@ -83,6 +73,23 @@ program
          console.log(chalk.red.bold(error.message));
       }
    });
+
+program
+   .command('reset')
+   .description('reset app config')
+   .action(async () => {
+      try {
+         const res = await editConfig.clearConfig();
+         if (res) {
+            console.log(chalk.green.bold('✔ app reseted successfully!'));
+         } else {
+            console.log(chalk.red.bold('✖ discarded app reset!'));
+         }
+      } catch (error) {
+         console.log(chalk.red.bold(error.message));
+      }
+   });
+
 // token stuff
 program
    .command('add-token')

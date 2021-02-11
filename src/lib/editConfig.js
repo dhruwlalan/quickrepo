@@ -1,5 +1,6 @@
 const inquirer = require('./inquirer');
 const config = require('./config');
+const { clearConfig } = require('./config');
 
 module.exports = {
    async editConfig() {
@@ -12,5 +13,10 @@ module.exports = {
          config.setAutoCommitMessage(answers.autoCommitMessage);
       }
       config.ranSetup(true);
+   },
+   async clearConfig() {
+      const answer = await inquirer.askClearConfig();
+      config.clearConfig();
+      return answer.clearConfig;
    },
 };

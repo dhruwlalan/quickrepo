@@ -47,6 +47,22 @@ module.exports = {
          },
       ]);
    },
+   askClearConfig() {
+      return inquirer.prompt([
+         {
+            name: 'clearConfig',
+            type: 'confirm',
+            message: 'are you sure you want to clear app config:',
+            default: false,
+            validate(value) {
+               if (value.length) {
+                  return true;
+               }
+               return 'please enter your choice';
+            },
+         },
+      ]);
+   },
 
    // Token Stuff...
    askNewToken() {
