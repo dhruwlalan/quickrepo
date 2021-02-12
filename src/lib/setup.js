@@ -1,18 +1,18 @@
 const inquirer = require('./inquirer');
-const config = require('./config');
+const store = require('./store');
 
 module.exports = {
    async appSetup() {
       const answers = await inquirer.askAppSetup();
-      config.setToken(answers.token);
+      store.setToken(answers.token);
       if (answers.autoCommit !== 'no') {
-         config.setAutoCommit(true);
-         config.setAutoCommitMessage(answers.autoCommitMessage);
+         store.setAutoCommit(true);
+         store.setAutoCommitMessage(answers.autoCommitMessage);
       } else {
-         config.setAutoCommit(false);
-         config.setAutoCommitMessage(answers.autoCommitMessage);
+         store.setAutoCommit(false);
+         store.setAutoCommitMessage(answers.autoCommitMessage);
       }
-      config.ranSetup(true);
+      store.ranSetup(true);
    },
    async rerunSetup() {
       const answer = await inquirer.askRerunSetup();

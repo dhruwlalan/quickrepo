@@ -1,44 +1,25 @@
-const ConfigStore = require('configstore');
-const pkg = require('../../package.json');
-
-const config = new ConfigStore(pkg.name);
-if (!config.has('ranSetup')) config.set('ranSetup', false);
-if (!config.has('token')) config.set('token', '');
-if (!config.has('autoCommit')) config.set('autoCommit', false);
-if (!config.has('autoCommitMessage')) config.set('autoCommitMessage', 'Initial Commit');
+const inquirer = require('./inquirer');
+const store = require('./store');
 
 module.exports = {
-   viewConfig() {
-      return config.all;
-   },
-   clearConfig() {
-      config.clear();
-   },
-
-   ranSetup(completed) {
-      if (completed) {
-         config.set('ranSetup', true);
+   async editConfig() {
+      const answers = await inquirer.askEditConfig();
+      if (answers.autoCommit !== 'no') {
+         store.setAutoCommit(true);
+         store.setAutoCommitMessage(answers.autoCommitMessage);
       } else {
-         return config.get('ranSetup');
+         store.setAutoCommit(false);
+         store.setAutoCommitMessage(answers.autoCommitMessage);
       }
+      store.ranSetup(true);
    },
-
-   getToken() {
-      return config.get('token');
-   },
-   setToken(token) {
-      config.set('token', token);
-   },
-   getAutoCommit() {
-      return config.get('autoCommit');
-   },
-   setAutoCommit(value) {
-      config.set('autoCommit', value);
-   },
-   getAutoCommitMessage() {
-      return config.get('autoCommitMessage');
-   },
-   setAutoCommitMessage(value) {
-      config.set('autoCommitMessage', value);
+   async resetConfig() {
+      try {
+         const answer = await inquirer.askResetConfig();
+         store.clearConfig();
+         return answer.resetConfig;
+      } catch (error) {
+         return false;
+      }
    },
 };

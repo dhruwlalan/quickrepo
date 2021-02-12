@@ -3,7 +3,7 @@ const shell = require('shelljs');
 const pkg = require('../../package.json');
 const info = require('./info');
 const inquirer = require('./inquirer');
-const config = require('./config');
+const store = require('./store');
 
 module.exports = {
    // Repo Stuff..

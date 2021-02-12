@@ -47,12 +47,12 @@ module.exports = {
          },
       ]);
    },
-   askClearConfig() {
+   askResetConfig() {
       return inquirer.prompt([
          {
-            name: 'clearConfig',
+            name: 'resetConfig',
             type: 'confirm',
-            message: 'are you sure you want to clear app config:',
+            message: 'are you sure you want to reset app config:',
             default: false,
             validate(value) {
                if (value.length) {

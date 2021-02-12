@@ -2,7 +2,7 @@ const { Octokit } = require('@octokit/rest');
 const ora = require('ora');
 const chalk = require('chalk');
 const inquirer = require('./inquirer');
-const config = require('./config');
+const store = require('./store');
 
 module.exports = {
    async addToken() {
@@ -11,8 +11,8 @@ module.exports = {
       const user = await this.verifyToken(newToken);
       if (user) {
          spinner.stop();
-         console.log(chalk.green.bold('✔ token added successfully!'));
-         config.setToken(newToken);
+         console.log(chalk.green.bold('✔ provided token is valid!'));
+         store.setToken(newToken);
          return true;
       }
       spinner.stop();

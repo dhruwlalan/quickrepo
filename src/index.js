@@ -3,7 +3,7 @@
 const { program } = require('commander');
 const chalk = require('chalk');
 const setup = require('./lib/setup');
-const editConfig = require('./lib/editConfig');
+const store = require('./lib/store');
 const config = require('./lib/config');
 const token = require('./lib/token');
 const github = require('./lib/github');
@@ -21,21 +21,21 @@ program
             if (rerun) {
                const res = await token.addToken();
                if (res) {
-                  await editConfig.editConfig();
+                  await config.editConfig();
                   console.log(chalk.green.bold('✔ setup complete!'));
                } else {
-                  console.log(chalk.red.bold('✖ aborting setup!'));
+                  console.log(chalk.red.bold('✖ aborted setup!'));
                }
             } else {
-               console.log(chalk.red.bold('✖ discarding setup!'));
+               console.log(chalk.red.bold('✖ discarded setup!'));
             }
          } else {
             const res = await token.addToken();
             if (res) {
-               await editConfig.editConfig();
+               await config.editConfig();
                console.log(chalk.green.bold('✔ setup complete!'));
             } else {
-               console.log(chalk.red.bold('✖ aborting setup!'));
+               console.log(chalk.red.bold('✖ aborted setup!'));
             }
          }
       } catch (error) {
@@ -49,7 +49,7 @@ program
    .description('view all configs')
    .action(async () => {
       try {
-         const allConfigs = Object.entries(config.viewConfig());
+         const allConfigs = Object.entries(store.viewConfig());
          allConfigs.forEach((conf) => {
             // if (conf[0] !== 'ranSetup') {
             const key = chalk.cyan.bold(conf[0]);
@@ -67,26 +67,21 @@ program
    .description('edit app config')
    .action(async () => {
       try {
-         await editConfig.editConfig();
-         console.log(chalk.green.bold('edited config successfully!'));
+         await config.editConfig();
+         console.log(chalk.green.bold('✔ edited config successfully!'));
       } catch (error) {
          console.log(chalk.red.bold(error.message));
       }
    });
-
 program
-   .command('reset')
+   .command('reset-config')
    .description('reset app config')
    .action(async () => {
-      try {
-         const res = await editConfig.clearConfig();
-         if (res) {
-            console.log(chalk.green.bold('✔ app reseted successfully!'));
-         } else {
-            console.log(chalk.red.bold('✖ discarded app reset!'));
-         }
-      } catch (error) {
-         console.log(chalk.red.bold(error.message));
+      const res = await config.resetConfig();
+      if (res) {
+         console.log(chalk.green.bold('✔ config reseted successfully!'));
+      } else {
+         console.log(chalk.red.bold('✖ discarded config reset!'));
       }
    });
 
@@ -95,7 +90,12 @@ program
    .command('add-token')
    .description('add new github personal access token')
    .action(async () => {
-      await token.addToken();
+      const res = await token.addToken();
+      if (res) {
+         console.log(chalk.green.bold('✔ token added successfully!'));
+      } else {
+         console.log(chalk.red.bold('✖ unable to add token!'));
+      }
    });
 program
    .command('verify-token')
