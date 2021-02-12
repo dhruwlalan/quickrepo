@@ -52,7 +52,7 @@ module.exports = {
          {
             name: 'resetConfig',
             type: 'confirm',
-            message: 'are you sure you want to reset app config:',
+            message: 'are you sure you want to reset app:',
             default: false,
             validate(value) {
                if (value.length) {
@@ -86,12 +86,28 @@ module.exports = {
          {
             name: 'newToken',
             type: 'input',
-            message: 'add a new personal access token:',
+            message: 'enter personal access token:',
             validate(value) {
                if (value.length) {
                   return true;
                }
                return 'please enter your personal access token.';
+            },
+         },
+      ]);
+   },
+   askDeleteToken() {
+      return inquirer.prompt([
+         {
+            name: 'deleteToken',
+            type: 'confirm',
+            message: 'are you sure you want to delete the stored token:',
+            default: false,
+            validate(value) {
+               if (value.length) {
+                  return true;
+               }
+               return 'please enter your choice.';
             },
          },
       ]);

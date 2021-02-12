@@ -1,7 +1,17 @@
 #!/usr/bin/env node
 
 const { program } = require('commander');
-const { white, red, green, yellowBright, cyan, blue, bold } = require('colorette');
+const {
+   white,
+   red,
+   green,
+   yellowBright,
+   cyan,
+   blue,
+   bold,
+   whiteBright,
+   cyanBright,
+} = require('colorette');
 const setup = require('./lib/setup');
 const store = require('./lib/store');
 const config = require('./lib/config');
@@ -19,7 +29,7 @@ program
             console.log(yellowBright('⚠ you have already ran the setup.'));
             const rerun = await setup.rerunSetup();
             if (rerun) {
-               const res = await token.addToken();
+               const res = await token.addNewToken();
                if (res) {
                   await config.editConfig();
                   store.ranSetup(true);
@@ -27,11 +37,9 @@ program
                } else {
                   console.log(bold(red('✖ aborted setup!')));
                }
-            } else {
-               console.log(bold(red('✖ discarded setup!')));
             }
          } else {
-            const res = await token.addToken();
+            const res = await token.addNewToken();
             if (res) {
                await config.editConfig();
                store.ranSetup(true);
@@ -42,6 +50,24 @@ program
          }
       } catch (error) {
          console.log(bold(red(error.message)));
+      }
+   });
+program
+   .command('reset')
+   .description('reset app')
+   .action(async () => {
+      if (info.ranSetup) {
+         console.log(bold(cyan('reseting app will clear your stored token & your configs!')));
+         const res = await config.resetConfig();
+         if (res) {
+            console.log(bold(green('✔ app reseted successfully!')));
+         }
+      } else {
+         console.log(bold(cyan('your app is already in its default state!')));
+         console.log(
+            whiteBright('if you want to setup your app, run any one of the below two commands:'),
+         );
+         console.log(cyanBright('$ quickrepo setup\n$ qr setup'));
       }
    });
 
@@ -69,17 +95,6 @@ program
          console.log(bold(red('✖ unable to edit config!')));
       }
    });
-program
-   .command('reset-config')
-   .description('reset app config')
-   .action(async () => {
-      const res = await config.resetConfig();
-      if (res) {
-         console.log(bold(green('✔ config reseted successfully!')));
-      } else {
-         console.log(bold(red('✖ discarded config reset!')));
-      }
-   });
 
 ///token stuff///
 program
@@ -87,9 +102,8 @@ program
    .description('add new github personal access token')
    .action(async () => {
       setup.checkSetup();
-      console.log(bold(white('checking stored token...')));
       const user = await token.verifyToken(store.getToken());
-      if (user) {
+      if (user && user !== 'noToken') {
          console.log(
             yellowBright(
                '⚠ you already have a valid stored token, adding a new one would replace it.',
@@ -118,7 +132,7 @@ program
    .description('verify github personal access token')
    .action(async () => {
       setup.checkSetup();
-      const user = await token.verifyToken(store.getToken());
+      const user = await token.displayVerifyToken(store.getToken());
       if (user) {
          console.log(`${bold(blue('username'))} ${bold(white('—→'))} ${bold(cyan(user.login))}`);
          console.log(
@@ -132,7 +146,23 @@ program
    .action(async () => {
       setup.checkSetup();
       const storedToken = store.getToken();
-      console.log(`${bold(cyan('token'))} ${bold(white('—→'))} ${bold(green(storedToken))}`);
+      if (!storedToken) {
+         console.log(yellowBright('⚠ you dont have a token stored in the app.'));
+         console.log(whiteBright('to add a token you can run either of the below two commands:'));
+         console.log(cyanBright('$ quickrepo add-token\n$ qr add-token'));
+      } else {
+         console.log(`${bold(cyan('token'))} ${bold(white('—→'))} ${bold(green(storedToken))}`);
+      }
+   });
+program
+   .command('delete-token')
+   .description('view your stored github personal access token')
+   .action(async () => {
+      setup.checkSetup();
+      const res = await token.deleteToken();
+      if (res) {
+         console.log(bold(green('✔ token deleted successfully!')));
+      }
    });
 
 ///repo stuff///

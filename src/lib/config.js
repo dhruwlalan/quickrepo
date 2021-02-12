@@ -6,10 +6,14 @@ module.exports = {
       try {
          const answers = await inquirer.askEditConfig();
          if (answers.autoCommit !== 'no') {
-            store.setAutoCommit(true);
+            if (answers.autoCommit === 'yes') {
+               store.setAutoCommit('yes');
+            } else {
+               store.setAutoCommit('ask each time');
+            }
             store.setAutoCommitMessage(answers.autoCommitMessage);
          } else {
-            store.setAutoCommit(false);
+            store.setAutoCommit('no');
             store.setAutoCommitMessage(answers.autoCommitMessage);
          }
          return true;
@@ -19,9 +23,12 @@ module.exports = {
    },
    async resetConfig() {
       try {
-         const answer = await inquirer.askResetConfig();
-         store.clearConfig();
-         return answer.resetConfig;
+         const { resetConfig } = await inquirer.askResetConfig();
+         if (resetConfig) {
+            store.clearConfig();
+            return true;
+         }
+         return false;
       } catch (error) {
          return false;
       }

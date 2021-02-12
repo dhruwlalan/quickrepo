@@ -24,7 +24,7 @@ module.exports = {
       if (!info.ranSetup) {
          console.log(yellowBright('⚠ please run the setup first.'));
          console.log(whiteBright('to run the setup you can use either of the two commands:'));
-         console.log(cyanBright('$ qr setup\n$ quickrepo setup'));
+         console.log(cyanBright('$ quickrepo setup\n$ qr setup'));
          process.exit();
       }
    },
