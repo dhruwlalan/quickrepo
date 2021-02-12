@@ -65,7 +65,23 @@ module.exports = {
    },
 
    // Token Stuff...
-   askNewToken() {
+   askConfirmNewToken() {
+      return inquirer.prompt([
+         {
+            name: 'confirmNewToken',
+            type: 'confirm',
+            message: 'are you sure you want to add a new token:',
+            default: false,
+            validate(value) {
+               if (value.length) {
+                  return true;
+               }
+               return 'please enter your choice.';
+            },
+         },
+      ]);
+   },
+   askAddNewToken() {
       return inquirer.prompt([
          {
             name: 'newToken',

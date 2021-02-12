@@ -5,8 +5,12 @@ const inquirer = require('./inquirer');
 const store = require('./store');
 
 module.exports = {
-   async addToken() {
-      const { newToken } = await inquirer.askNewToken();
+   async confirmNewToken() {
+      const { confirmNewToken } = await inquirer.askConfirmNewToken();
+      return confirmNewToken;
+   },
+   async addNewToken() {
+      const { newToken } = await inquirer.askAddNewToken();
       const user = await this.verifyToken(newToken);
       if (user) {
          store.setToken(newToken);
