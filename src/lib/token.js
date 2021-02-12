@@ -1,34 +1,39 @@
 const { Octokit } = require('@octokit/rest');
+const { white, red, blue, green, cyan, bold } = require('colorette');
 const ora = require('ora');
-const chalk = require('chalk');
 const inquirer = require('./inquirer');
 const store = require('./store');
 
 module.exports = {
    async addToken() {
       const { newToken } = await inquirer.askNewToken();
-      const spinner = ora(chalk.cyan.bold('verifying Token...')).start();
       const user = await this.verifyToken(newToken);
       if (user) {
-         spinner.stop();
-         console.log(chalk.green.bold('✔ provided token is valid!'));
          store.setToken(newToken);
          return true;
       }
-      spinner.stop();
-      console.log(chalk.red.bold('✖ provided token is invalid!'));
       return false;
    },
    async verifyToken(token) {
+      if (!token) {
+         console.log(bold(white('there is no stored token!')));
+         console.log(bold(blue('run add-token to add a new token.')));
+         return false;
+      }
+      const spinner = ora(bold(cyan('verifying Token...'))).start();
       try {
-         if (token !== '') {
-            const octokit = new Octokit({
-               auth: token,
-            });
-            const { data } = await octokit.request('/user');
-            return data;
+         const octokit = new Octokit({
+            auth: token,
+         });
+         const { data } = await octokit.request('/user');
+         if (data) {
+            spinner.stop();
+            console.log(bold(green('✔ token is valid!')));
          }
+         return data;
       } catch (error) {
+         spinner.stop();
+         console.log(bold(red('✖ token is invalid!')));
          return false;
       }
    },

@@ -16,7 +16,7 @@
    "license": "MIT",
    "dependencies": {
       "@octokit/rest": "^18.1.0",
-      "chalk": "^4.1.0",
+      "colorette": "^1.2.1",
       "commander": "^7.0.0",
       "configstore": "^5.0.1",
       "inquirer": "^7.3.3",

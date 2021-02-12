@@ -3,15 +3,19 @@ const store = require('./store');
 
 module.exports = {
    async editConfig() {
-      const answers = await inquirer.askEditConfig();
-      if (answers.autoCommit !== 'no') {
-         store.setAutoCommit(true);
-         store.setAutoCommitMessage(answers.autoCommitMessage);
-      } else {
-         store.setAutoCommit(false);
-         store.setAutoCommitMessage(answers.autoCommitMessage);
+      try {
+         const answers = await inquirer.askEditConfig();
+         if (answers.autoCommit !== 'no') {
+            store.setAutoCommit(true);
+            store.setAutoCommitMessage(answers.autoCommitMessage);
+         } else {
+            store.setAutoCommit(false);
+            store.setAutoCommitMessage(answers.autoCommitMessage);
+         }
+         return true;
+      } catch (error) {
+         return false;
       }
-      store.ranSetup(true);
    },
    async resetConfig() {
       try {

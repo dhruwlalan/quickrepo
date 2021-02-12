@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const { program } = require('commander');
-const chalk = require('chalk');
+const { white, red, green, yellowBright, cyan, bold } = require('colorette');
 const setup = require('./lib/setup');
 const store = require('./lib/store');
 const config = require('./lib/config');
@@ -16,30 +16,32 @@ program
    .action(async () => {
       try {
          if (info.ranSetup) {
-            console.log(chalk.blue.bold('you have already ran the setup!'));
+            console.log(yellowBright('⚠ you have already ran the setup.'));
             const rerun = await setup.rerunSetup();
             if (rerun) {
                const res = await token.addToken();
                if (res) {
                   await config.editConfig();
-                  console.log(chalk.green.bold('✔ setup complete!'));
+                  store.ranSetup(true);
+                  console.log(bold(green('✔ setup complete!')));
                } else {
-                  console.log(chalk.red.bold('✖ aborted setup!'));
+                  console.log(bold(red('✖ aborted setup!')));
                }
             } else {
-               console.log(chalk.red.bold('✖ discarded setup!'));
+               console.log(bold(red('✖ discarded setup!')));
             }
          } else {
             const res = await token.addToken();
             if (res) {
                await config.editConfig();
-               console.log(chalk.green.bold('✔ setup complete!'));
+               store.ranSetup(true);
+               console.log(bold(green('✔ setup complete!')));
             } else {
-               console.log(chalk.red.bold('✖ aborted setup!'));
+               console.log(bold(red('✖ aborted setup!')));
             }
          }
       } catch (error) {
-         console.log(chalk.red.bold(error.message));
+         console.log(bold(red(error.message)));
       }
    });
 
@@ -48,29 +50,22 @@ program
    .command('view-config')
    .description('view all configs')
    .action(async () => {
-      try {
-         const allConfigs = Object.entries(store.viewConfig());
-         allConfigs.forEach((conf) => {
-            // if (conf[0] !== 'ranSetup') {
-            const key = chalk.cyan.bold(conf[0]);
-            const value = chalk.green.bold(conf[1]);
-            const seperator = chalk.white.bold('—→');
-            console.log(`${key} ${seperator} ${value}`);
-            // }
-         });
-      } catch (error) {
-         console.log(chalk.red.bold(error.message));
-      }
+      const allConfigs = Object.entries(store.viewConfig());
+      allConfigs.forEach((conf) => {
+         // if (conf[0] !== 'ranSetup') {
+         console.log(`${bold(cyan(conf[0]))} ${bold(white('—→'))} ${bold(green(conf[1]))}`);
+         // }
+      });
    });
 program
    .command('edit-config')
    .description('edit app config')
    .action(async () => {
-      try {
-         await config.editConfig();
-         console.log(chalk.green.bold('✔ edited config successfully!'));
-      } catch (error) {
-         console.log(chalk.red.bold(error.message));
+      const res = await config.editConfig();
+      if (res) {
+         console.log(bold(green('✔ edited config successfully!')));
+      } else {
+         console.log(bold(red('✖ unable to edit config!')));
       }
    });
 program
@@ -79,9 +74,9 @@ program
    .action(async () => {
       const res = await config.resetConfig();
       if (res) {
-         console.log(chalk.green.bold('✔ config reseted successfully!'));
+         console.log(bold(green('✔ config reseted successfully!')));
       } else {
-         console.log(chalk.red.bold('✖ discarded config reset!'));
+         console.log(bold(red('✖ discarded config reset!')));
       }
    });
 
@@ -90,24 +85,33 @@ program
    .command('add-token')
    .description('add new github personal access token')
    .action(async () => {
+      // if (!info.ranSetup) {
+      //    console.log(chalk.yellow('⚠ please run the setup first!'));
+      //    console.log(chalk.white.bold('to run the setup you can use either of the two commands:'));
+      //    console.log(chalk.cyan.bold('$ qr setup\n$ quickrepo setup'));
+      //    process.exit();
+      // }
+      setup.checkSetup();
       const res = await token.addToken();
       if (res) {
-         console.log(chalk.green.bold('✔ token added successfully!'));
+         console.log(bold(green('✔ token added successfully!')));
       } else {
-         console.log(chalk.red.bold('✖ unable to add token!'));
+         console.log(bold(red('✖ unable to add token!')));
       }
    });
 program
    .command('verify-token')
    .description('verify github personal access token')
    .action(async () => {
-      const user = await token.verifyToken();
+      const user = await token.verifyToken(store.getToken());
       if (user) {
-         console.log(chalk.green.bold('token is valid'));
-      } else {
-         console.log(chalk.red.bold('token is invalid'));
+         console.log(`${bold(cyan('username'))} ${bold(white('—→'))} ${bold(green(user.login))}`);
+         console.log(
+            `${bold(cyan('github-url'))} ${bold(white('—→'))} ${bold(cyan('github-url'))}`,
+         );
       }
    });
+
 // repo stuff
 program
    .command('init')
@@ -117,15 +121,14 @@ program
          const url = await github.createRemoteRepository();
          const res = await github.createLocalRepository(url);
          // const res = await github.createLocalRepository('haha');
-         console.log(chalk.green.bold('Created repository successfully!'));
+         console.log(bold(green('Created repository successfully!')));
       } catch (error) {
-         console.log(chalk.red.bold(error.message));
+         console.log(bold(red(error.message)));
       }
    });
 
-// current versiion of app
+// version & help
 program.version('1.0.0', '-v, --version', 'output the current version');
-// display help
 program.name('qr').usage('[options] [command]');
 program.addHelpText('before', 'usage: quickrepo [options] [command]');
 program.parse(process.argv);
