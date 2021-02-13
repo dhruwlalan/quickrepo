@@ -1,15 +1,6 @@
 const { Octokit } = require('@octokit/rest');
-const {
-   whiteBright,
-   cyanBright,
-   red,
-   blue,
-   green,
-   cyan,
-   yellowBright,
-   bold,
-} = require('colorette');
 const ora = require('ora');
+const { cyanB, log } = require('./clogs');
 const inquirer = require('./inquirer');
 const store = require('./store');
 
@@ -29,20 +20,19 @@ module.exports = {
    },
    async displayVerifyToken(token) {
       if (!token) {
-         console.log(yellowBright('⚠ you dont have a token stored in the app ⚠'));
-         console.log(whiteBright('to add a token you can run either of the below two commands:'));
-         console.log(cyanBright('$ quickrepo add-token\n$ qr add-token'));
+         log.warn('you dont have a token stored in the app');
+         log.hint('to add a token you can run either of the below two commands:', 'add-token');
          process.exit();
       }
-      const spinner = ora(bold(cyan('verifying Token...'))).start();
+      const spinner = ora(cyanB('verifying Token...')).start();
       const user = await this.verifyToken(token);
       if (user) {
          spinner.stop();
-         console.log(bold(green('✔ token is valid!')));
+         log.success('token is valid!');
          return user;
       }
       spinner.stop();
-      console.log(bold(red('✖ token is invalid!')));
+      log.error('token is invalid!');
       return false;
    },
    async verifyToken(token) {
@@ -64,7 +54,7 @@ module.exports = {
    },
    async deleteToken() {
       if (!store.getToken()) {
-         console.log(yellowBright('⚠ you dont have a token stored in the app to delete ⚠'));
+         log.warn('you dont have a token stored in the app to delete');
          process.exit();
       } else {
          const { deleteToken } = await inquirer.askDeleteToken();

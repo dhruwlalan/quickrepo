@@ -1,23 +1,13 @@
 #!/usr/bin/env node
 
 const { program } = require('commander');
-const {
-   white,
-   red,
-   green,
-   yellowBright,
-   cyan,
-   blue,
-   bold,
-   whiteBright,
-   cyanBright,
-} = require('colorette');
 const setup = require('./lib/setup');
 const store = require('./lib/store');
 const config = require('./lib/config');
 const token = require('./lib/token');
 const github = require('./lib/github');
 const info = require('./lib/info');
+const { whiteB, redB, blueB, greenB, cyanB, log } = require('./lib/clogs');
 
 ///app setup///
 program
@@ -26,16 +16,16 @@ program
    .action(async () => {
       try {
          if (info.ranSetup) {
-            console.log(yellowBright('⚠ you have already ran the setup ⚠'));
+            log.warn('you have already ran the setup');
             const rerun = await setup.rerunSetup();
             if (rerun) {
                const res = await token.addNewToken();
                if (res) {
                   await config.editConfig();
                   store.ranSetup(true);
-                  console.log(bold(green('✔ setup complete!')));
+                  log.success('setup complete!');
                } else {
-                  console.log(bold(red('✖ aborted setup!')));
+                  log.error('aborted setup!');
                }
             }
          } else {
@@ -43,13 +33,13 @@ program
             if (res) {
                await config.editConfig();
                store.ranSetup(true);
-               console.log(bold(green('✔ setup complete!')));
+               log.success('setup complete!');
             } else {
-               console.log(bold(red('✖ aborted setup!')));
+               log.error('aborted setup!');
             }
          }
       } catch (error) {
-         console.log(bold(red(error.message)));
+         console.log(redB(error.message));
       }
    });
 program
@@ -57,17 +47,14 @@ program
    .description('reset app')
    .action(async () => {
       if (info.ranSetup) {
-         console.log(yellowBright('⚠ reseting app will clear your stored token & your configs ⚠'));
+         log.warn('reseting app will clear your stored token & your configs');
          const res = await config.resetConfig();
          if (res) {
-            console.log(bold(green('✔ app reseted successfully!')));
+            log.success('app reseted successfully!');
          }
       } else {
-         console.log(bold(cyan('your app is already in its default state!')));
-         console.log(
-            whiteBright('if you want to setup your app, run any one of the below two commands:'),
-         );
-         console.log(cyanBright('$ quickrepo setup\n$ qr setup'));
+         log.info('your app is already in its default state!');
+         log.hint('if you want to setup your app, run any one of the below two commands:', 'setup');
       }
    });
 
@@ -79,7 +66,7 @@ program
       const allConfigs = Object.entries(store.viewConfig());
       allConfigs.forEach((conf) => {
          // if (conf[0] !== 'ranSetup') {
-         console.log(`${bold(cyan(conf[0]))} ${bold(white('—→'))} ${bold(green(conf[1]))}`);
+         console.log(`${cyanB(conf[0])} ${whiteB('—→')} ${greenB(conf[1])}`);
          // }
       });
    });
@@ -90,9 +77,9 @@ program
       setup.checkSetup();
       const res = await config.editConfig();
       if (res) {
-         console.log(bold(green('✔ edited config successfully!')));
+         log.success('edited config successfully!');
       } else {
-         console.log(bold(red('✖ unable to edit config!')));
+         log.error('unable to edit config!');
       }
    });
 
@@ -104,26 +91,22 @@ program
       setup.checkSetup();
       const user = await token.verifyToken(store.getToken());
       if (user && user !== 'not-stored') {
-         console.log(
-            yellowBright(
-               '⚠ you already have a valid stored token, adding a new one would replace it ⚠',
-            ),
-         );
+         log.warn('you already have a valid stored token, adding a new one would replace it');
          const confirm = await token.confirmNewToken();
          if (confirm) {
             const res = await token.addNewToken();
             if (res) {
-               console.log(bold(green('✔ token added successfully!')));
+               log.success('token added successfully!');
             } else {
-               console.log(bold(red('✖ unable to add token!')));
+               log.error('unable to add token!');
             }
          }
       } else {
          const res = await token.addNewToken();
          if (res) {
-            console.log(bold(green('✔ token added successfully!')));
+            log.success('token added successfully!');
          } else {
-            console.log(bold(red('✖ unable to add token!')));
+            log.error('unable to add token!');
          }
       }
    });
@@ -134,17 +117,12 @@ program
       setup.checkSetup();
       const user = await token.displayVerifyToken(store.getToken());
       if (user) {
-         console.log(`${bold(blue('username'))} ${bold(white('—→'))} ${bold(cyan(user.login))}`);
-         console.log(
-            `${bold(blue('github-url'))} ${bold(white('—→'))} ${bold(cyan(user.html_url))}`,
-         );
+         console.log(`${blueB('username')} ${whiteB('—→')} ${cyanB(user.login)}`);
+         console.log(`${blueB('github-url')} ${whiteB('—→')} ${cyanB(user.html_url)}`);
       } else {
-         console.log(yellowBright('⚠ the stored token has become invalid ⚠'));
-         console.log(whiteBright('kindly add a valid new token.'));
-         console.log(
-            whiteBright('to add a new token you can run either of the below two commands:'),
-         );
-         console.log(cyanBright('$ quickrepo add-token\n$ qr add-token'));
+         log.warn('the stored token has become invalid');
+         log.info('kindly add a valid new token');
+         log.hint('to add a new token you can run either of the below two commands:', 'add-token');
       }
    });
 program
@@ -154,11 +132,10 @@ program
       setup.checkSetup();
       const storedToken = store.getToken();
       if (!storedToken) {
-         console.log(yellowBright('⚠ you dont have a token stored in the app ⚠'));
-         console.log(whiteBright('to add a token you can run either of the below two commands:'));
-         console.log(cyanBright('$ quickrepo add-token\n$ qr add-token'));
+         log.warn('you dont have a token stored in the app');
+         log.hint('to add a token you can run either of the below two commands:', 'add-token');
       } else {
-         console.log(`${bold(cyan('token'))} ${bold(white('—→'))} ${bold(green(storedToken))}`);
+         console.log(`${cyanB('token')} ${whiteB('—→')} ${greenB(storedToken)}`);
       }
    });
 program
@@ -168,7 +145,7 @@ program
       setup.checkSetup();
       const res = await token.deleteToken();
       if (res) {
-         console.log(bold(green('✔ token deleted successfully!')));
+         log.success('token deleted successfully!');
       }
    });
 
@@ -182,9 +159,9 @@ program
          const url = await github.createRemoteRepository();
          const res = await github.createLocalRepository(url);
          // const res = await github.createLocalRepository('haha');
-         console.log(bold(green('Created repository successfully!')));
-      } catch (error) {
-         console.log(bold(red(error.message)));
+         log.success('created repository successfully!');
+      } catch (e) {
+         log.error(e.message);
       }
    });
 
