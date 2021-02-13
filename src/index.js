@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 
-const { program } = require('commander');
 require('./lib/info');
-const { log } = require('./lib/clogs');
+const { program } = require('commander');
 const setup = require('./lib/setup');
 const config = require('./lib/config');
 const token = require('./lib/token');
-const github = require('./lib/github');
+const repo = require('./lib/repo');
 
 ///setup///
 program
@@ -72,15 +71,8 @@ program
    .command('init')
    .description('create repository')
    .action(async () => {
-      try {
-         setup.checkSetup();
-         const url = await github.createRemoteRepository();
-         const res = await github.createLocalRepository(url);
-         // const res = await github.createLocalRepository('haha');
-         log.success('created repository successfully!');
-      } catch (e) {
-         log.error(e.message);
-      }
+      setup.checkSetup();
+      await repo.createRepository();
    });
 
 ///version///

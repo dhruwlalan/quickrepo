@@ -3,7 +3,6 @@ const inquirer = require('./inquirer');
 const store = require('./store');
 const info = require('./info');
 const token = require('./token');
-const config = require('./config');
 
 module.exports = {
    async appSetup() {

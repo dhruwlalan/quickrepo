@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const info = require('./info');
+const store = require('./store');
 
 module.exports = {
    // App Setup...
@@ -165,7 +166,7 @@ module.exports = {
             name: 'initialCommitMessage',
             type: 'input',
             message: 'enter your initial commit message:',
-            default: 'Initial Commit',
+            default: store.getAutoCommitMessage,
             validate(value) {
                if (value.length) {
                   return true;
