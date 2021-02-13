@@ -26,7 +26,7 @@ program
    .action(async () => {
       try {
          if (info.ranSetup) {
-            console.log(yellowBright('⚠ you have already ran the setup.'));
+            console.log(yellowBright('⚠ you have already ran the setup ⚠'));
             const rerun = await setup.rerunSetup();
             if (rerun) {
                const res = await token.addNewToken();
@@ -57,7 +57,7 @@ program
    .description('reset app')
    .action(async () => {
       if (info.ranSetup) {
-         console.log(bold(cyan('reseting app will clear your stored token & your configs!')));
+         console.log(yellowBright('⚠ reseting app will clear your stored token & your configs ⚠'));
          const res = await config.resetConfig();
          if (res) {
             console.log(bold(green('✔ app reseted successfully!')));
@@ -103,10 +103,10 @@ program
    .action(async () => {
       setup.checkSetup();
       const user = await token.verifyToken(store.getToken());
-      if (user && user !== 'noToken') {
+      if (user && user !== 'not-stored') {
          console.log(
             yellowBright(
-               '⚠ you already have a valid stored token, adding a new one would replace it.',
+               '⚠ you already have a valid stored token, adding a new one would replace it ⚠',
             ),
          );
          const confirm = await token.confirmNewToken();
@@ -138,6 +138,13 @@ program
          console.log(
             `${bold(blue('github-url'))} ${bold(white('—→'))} ${bold(cyan(user.html_url))}`,
          );
+      } else {
+         console.log(yellowBright('⚠ the stored token has become invalid ⚠'));
+         console.log(whiteBright('kindly add a valid new token.'));
+         console.log(
+            whiteBright('to add a new token you can run either of the below two commands:'),
+         );
+         console.log(cyanBright('$ quickrepo add-token\n$ qr add-token'));
       }
    });
 program
@@ -147,7 +154,7 @@ program
       setup.checkSetup();
       const storedToken = store.getToken();
       if (!storedToken) {
-         console.log(yellowBright('⚠ you dont have a token stored in the app.'));
+         console.log(yellowBright('⚠ you dont have a token stored in the app ⚠'));
          console.log(whiteBright('to add a token you can run either of the below two commands:'));
          console.log(cyanBright('$ quickrepo add-token\n$ qr add-token'));
       } else {
