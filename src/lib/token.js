@@ -1,22 +1,89 @@
 const { Octokit } = require('@octokit/rest');
 const ora = require('ora');
-const { cyanB, log } = require('./clogs');
+const { whiteB, blueB, greenB, cyanB, log } = require('./clogs');
 const inquirer = require('./inquirer');
 const store = require('./store');
 
 module.exports = {
-   async confirmNewToken() {
-      const { confirmNewToken } = await inquirer.askConfirmNewToken();
-      return confirmNewToken;
+   viewToken() {
+      const storedToken = store.getToken();
+      if (!storedToken) {
+         log.warn('you dont have a token stored in the app');
+         log.hint('to add a token you can run either of the below two commands:', 'add-token');
+      } else {
+         console.log(`${cyanB('token')} ${whiteB('—→')} ${greenB(storedToken)}`);
+      }
+      process.exit();
    },
    async addNewToken() {
-      const { newToken } = await inquirer.askAddNewToken();
-      const user = await this.displayVerifyToken(newToken);
-      if (user) {
-         store.setToken(newToken);
-         return true;
+      try {
+         const spinner = ora(cyanB('checking stored token...')).start();
+         const oldUser = await this.verifyToken(store.getToken());
+         spinner.stop();
+         if (oldUser && oldUser !== 'not-stored') {
+            log.warn('you already have a valid stored token, adding a new one would replace it');
+            const { confirmNewToken } = await inquirer.askConfirmNewToken();
+            if (!confirmNewToken) {
+               process.exit();
+            }
+         }
+         const { newToken } = await inquirer.askAddNewToken();
+         const newUser = await this.displayVerifyToken(newToken);
+         if (newUser) {
+            store.setToken(newToken);
+            log.success('token added successfully!');
+         }
+         process.exit();
+      } catch (error) {
+         console.log(error.message);
+         process.exit();
       }
-      return false;
+   },
+   async deleteToken() {
+      try {
+         const spinner = ora(cyanB('checking stored token...')).start();
+         const user = await this.verifyToken(store.getToken());
+         spinner.stop();
+
+         if (user === 'not-stored') {
+            log.warn('you dont have a token stored in the app to delete');
+            process.exit();
+         } else if (user && user !== 'not-stored') {
+            log.warn('you already have a valid stored token');
+         } else {
+            log.info('your stored token has become invalid, better delete it');
+         }
+
+         const { deleteToken } = await inquirer.askDeleteToken();
+         if (deleteToken) {
+            store.setToken(null);
+            log.success('token deleted successfully!');
+         }
+         process.exit();
+      } catch (error) {
+         console.log(error.message);
+         process.exit();
+      }
+   },
+   async getUserFromToken() {
+      try {
+         const user = await this.displayVerifyToken(store.getToken());
+         if (user) {
+            console.log(`${blueB('username')} ${whiteB('—→')} ${cyanB(user.login)}`);
+            console.log(`${blueB('github-url')} ${whiteB('—→')} ${cyanB(user.html_url)}`);
+         } else {
+            log.warn('the stored token has become invalid');
+            log.info('kindly add a valid new token');
+            log.hint(
+               'to add a new token you can run either of the below two commands:',
+               'add-token',
+            );
+         }
+         process.exit();
+      } catch (error) {
+         console.log(error.message);
+         process.exit();
+      }
    },
    async displayVerifyToken(token) {
       if (!token) {
@@ -50,18 +117,6 @@ module.exports = {
          return false;
       } catch (error) {
          return false;
-      }
-   },
-   async deleteToken() {
-      if (!store.getToken()) {
-         log.warn('you dont have a token stored in the app to delete');
-         process.exit();
-      } else {
-         const { deleteToken } = await inquirer.askDeleteToken();
-         if (deleteToken) {
-            store.setToken(null);
-         }
-         return deleteToken;
       }
    },
 };

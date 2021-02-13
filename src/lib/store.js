@@ -29,12 +29,14 @@ module.exports = {
    setToken(token) {
       config.set('token', token);
    },
+
    getAutoCommit() {
       return config.get('autoCommit');
    },
    setAutoCommit(value) {
       config.set('autoCommit', value);
    },
+
    getAutoCommitMessage() {
       return config.get('autoCommitMessage');
    },

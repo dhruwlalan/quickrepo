@@ -2,23 +2,43 @@ const { log } = require('./clogs');
 const inquirer = require('./inquirer');
 const store = require('./store');
 const info = require('./info');
+const token = require('./token');
+const config = require('./config');
 
 module.exports = {
    async appSetup() {
-      const answers = await inquirer.askAppSetup();
-      store.setToken(answers.token);
-      if (answers.autoCommit !== 'no') {
-         store.setAutoCommit(true);
-         store.setAutoCommitMessage(answers.autoCommitMessage);
-      } else {
-         store.setAutoCommit(false);
-         store.setAutoCommitMessage(answers.autoCommitMessage);
+      try {
+         if (info.ranSetup) {
+            log.info('you have already ran the setup');
+            const { rerunSetup } = await inquirer.askRerunSetup();
+            if (!rerunSetup) process.exit();
+         }
+         const { newToken } = await inquirer.askAddNewToken();
+         const newUser = await token.displayVerifyToken(newToken);
+         if (newUser) {
+            store.setToken(newToken);
+            const { autoCommit, autoCommitMessage } = await inquirer.askEditConfig();
+            if (autoCommit !== 'no') {
+               if (autoCommit === 'yes') {
+                  store.setAutoCommit('yes');
+               } else {
+                  store.setAutoCommit('ask each time');
+               }
+               store.setAutoCommitMessage(autoCommitMessage);
+            } else {
+               store.setAutoCommit('no');
+               store.setAutoCommitMessage(autoCommitMessage);
+            }
+            store.ranSetup(true);
+            log.success('setup complete!');
+            process.exit();
+         }
+         log.error('aborted setup!');
+         process.exit();
+      } catch (error) {
+         console.log(error.message);
+         process.exit();
       }
-      store.ranSetup(true);
-   },
-   async rerunSetup() {
-      const answer = await inquirer.askRerunSetup();
-      return answer.rerunSetup;
    },
    checkSetup() {
       if (!info.ranSetup) {
