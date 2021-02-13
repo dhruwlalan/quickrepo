@@ -1,6 +1,7 @@
 const { Octokit } = require('@octokit/rest');
 const shell = require('shelljs');
 const ora = require('ora');
+const logUpdate = require('log-update');
 const info = require('./info');
 const { log, cyanB } = require('./clogs');
 const inquirer = require('./inquirer');
@@ -44,11 +45,13 @@ module.exports = {
       try {
          const octokit = await this.createOctokitInstance();
          const answers = await inquirer.askRemoteRepositoryDetails();
+         logUpdate(cyanB('creating remote repository...'));
          const { data } = await octokit.repos.createForAuthenticatedUser({
             name: answers.name,
             description: answers.description,
             private: answers.visibility === 'private',
          });
+         logUpdate.clear();
          const res = await this.createLocalRepository(data.ssh_url);
          if (res) {
             log.success('created repository successfully!');
@@ -79,10 +82,12 @@ module.exports = {
                      return true;
                   }
                }
+               logUpdate(cyanB('pushing local repository...'));
                shell.exec('git add .', { silent: true });
                shell.exec(`git commit -m "${store.getAutoCommitMessage()}"`, { silent: true });
                shell.exec('git branch -M master', { silent: true });
                shell.exec('git push -u origin master', { silent: true });
+               logUpdate.clear();
             }
             return true;
          }
