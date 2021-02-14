@@ -16,16 +16,17 @@ module.exports = {
          const newUser = await token.displayVerifyToken(newToken);
          if (newUser) {
             store.setToken(newToken);
-            const { autoCommit, autoCommitMessage } = await inquirer.askEditConfig();
-            if (autoCommit !== 'no') {
-               if (autoCommit === 'yes') {
-                  store.setAutoCommit('yes');
+            const { autoCommit, autoCommitMessage, hints } = await inquirer.askEditConfig();
+            store.setHints(hints);
+            if (autoCommit !== 'never') {
+               if (autoCommit === 'always') {
+                  store.setAutoCommit('always');
                } else {
                   store.setAutoCommit('ask each time');
                }
                store.setAutoCommitMessage(autoCommitMessage);
             } else {
-               store.setAutoCommit('no');
+               store.setAutoCommit('never');
                store.setAutoCommitMessage(autoCommitMessage);
             }
             store.ranSetup(true);
