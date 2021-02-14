@@ -1,19 +1,40 @@
 {
-   "name": "quickrepo",
+   "name": "quick-repository",
    "version": "1.0.0",
-   "description": "quickly create a repository locally & also host it on github, all via the command line!",
-   "main": "index.js",
-   "preferGlobal": true,
+   "description": "Quickly create a repository locally & also host it on github, all via the command line!",
+   "main": "src/index.js",
    "bin": {
       "quickrepo": "src/index.js",
       "qr": "src/index.js"
    },
+   "engines": {
+      "node": ">=10"
+   },
+   "files": [
+      "src"
+   ],
    "scripts": {
       "start": "node ./src/index.js init"
    },
-   "keywords": [],
-   "author": "dhruw",
+   "repository": {
+      "type": "git",
+      "url": "https://github.com/dhruwlalan/quickrepo.git"
+   },
+   "keywords": [
+      "commander",
+      "inquirer",
+      "cli",
+      "utility",
+      "octokit",
+      "git",
+      "github"
+   ],
+   "author": "dhruw lalan <dhruwlalan22@gmail.com>",
    "license": "MIT",
+   "bugs": {
+      "url": "https://github.com/dhruwlalan/quickrepo/issues"
+   },
+   "homepage": "https://github.com/dhruwlalan/quickrepo#readme",
    "dependencies": {
       "@octokit/rest": "^18.1.0",
       "colorette": "^1.2.1",
