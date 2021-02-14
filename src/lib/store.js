@@ -4,8 +4,9 @@ const pkg = require('../../package.json');
 const config = new ConfigStore(pkg.name);
 if (!config.has('ranSetup')) config.set('ranSetup', false);
 if (!config.has('token')) config.set('token', null);
-if (!config.has('autoCommit')) config.set('autoCommit', false);
-if (!config.has('autoCommitMessage')) config.set('autoCommitMessage', null);
+if (!config.has('autoCommit')) config.set('autoCommit', 'ask each time');
+if (!config.has('autoCommitMessage')) config.set('autoCommitMessage', 'Initial Commit');
+if (!config.has('hints')) config.set('hints', 'on');
 
 module.exports = {
    viewConfig() {
@@ -42,5 +43,12 @@ module.exports = {
    },
    setAutoCommitMessage(value) {
       config.set('autoCommitMessage', value);
+   },
+
+   getHints() {
+      return config.get('hints');
+   },
+   setHints(value) {
+      config.set('hints', value);
    },
 };

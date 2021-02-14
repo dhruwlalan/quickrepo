@@ -7,24 +7,28 @@ module.exports = {
    viewConfig() {
       const allConfigs = Object.entries(store.viewConfig());
       allConfigs.forEach((conf) => {
-         // if (conf[0] !== 'ranSetup') {
-         console.log(`${cyanB(conf[0])} ${whiteB('—→')} ${greenB(conf[1])}`);
-         // }
+         if (conf[0] !== 'ranSetup' && conf[0] !== 'token') {
+            if (conf[0] === 'autoCommitMessage' && store.getAutoCommit() === 'never') {
+               return;
+            }
+            console.log(`${cyanB(conf[0])} ${whiteB('—→')} ${greenB(conf[1])}`);
+         }
       });
    },
    async editConfig() {
       try {
-         const { autoCommit, autoCommitMessage } = await inquirer.askEditConfig();
-         if (autoCommit !== 'no') {
-            if (autoCommit === 'yes') {
-               store.setAutoCommit('yes');
+         const { autoCommit, autoCommitMessage, hints } = await inquirer.askEditConfig();
+         store.setHints(hints);
+         if (autoCommit !== 'never') {
+            if (autoCommit === 'always') {
+               store.setAutoCommit('always');
             } else {
                store.setAutoCommit('ask each time');
             }
             store.setAutoCommitMessage(autoCommitMessage);
             log.success('edited config successfully!');
          } else {
-            store.setAutoCommit('no');
+            store.setAutoCommit('never');
             store.setAutoCommitMessage(autoCommitMessage);
             log.success('edited config successfully!');
          }

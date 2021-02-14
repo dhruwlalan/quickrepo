@@ -71,9 +71,9 @@ module.exports = {
       try {
          shell.exec('git init', { silent: true });
          shell.exec(`git remote add origin ${url}`, { silent: true });
-         if (store.getAutoCommit() !== 'no') {
+         if (store.getAutoCommit() !== 'never') {
             if (info.containsContent) {
-               if (store.getAutoCommit() !== 'yes') {
+               if (store.getAutoCommit() !== 'always') {
                   const { initialCommit } = await inquirer.askToCreateInitialCommit();
                   if (initialCommit) {
                      const { initialCommitMessage } = await inquirer.askInitialCommitMessage();

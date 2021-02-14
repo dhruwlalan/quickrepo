@@ -13,6 +13,7 @@ const {
    cyanBright,
    bold,
 } = require('colorette');
+const store = require('./store');
 
 module.exports = {
    log: {
@@ -29,9 +30,11 @@ module.exports = {
          console.log(yellowBright(`⚠ ${output} ⚠`));
       },
       hint(message, command) {
-         console.log(whiteBright(message));
-         console.log(cyanBright(`$ quickrepo ${command}`));
-         console.log(cyanBright(`$ qr ${command}`));
+         if (store.getHints() === 'on') {
+            console.log(whiteBright(message));
+            console.log(cyanBright(`$ quickrepo ${command}`));
+            console.log(cyanBright(`$ qr ${command}`));
+         }
       },
    },
 

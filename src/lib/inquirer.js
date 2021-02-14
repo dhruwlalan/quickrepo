@@ -22,7 +22,7 @@ module.exports = {
             name: 'autoCommit',
             type: 'list',
             message: 'do you want to auto commit & push when having contents inside repo:',
-            choices: ['yes', 'no', 'ask each time'],
+            choices: ['always', 'never', 'ask each time'],
             default: 0,
             validate(value) {
                if (value.length) {
@@ -37,13 +37,26 @@ module.exports = {
             message: 'default initial auto commit message:',
             default: 'Initial Commit',
             when({ autoCommit }) {
-               return autoCommit !== 'no';
+               return autoCommit !== 'never';
             },
             validate(value) {
                if (value.length) {
                   return true;
                }
                return 'please enter your default initial commit message';
+            },
+         },
+         {
+            name: 'hints',
+            type: 'list',
+            message: 'show hints?',
+            choices: ['on', 'off'],
+            default: 0,
+            validate(value) {
+               if (value.length) {
+                  return true;
+               }
+               return 'please enter your choice';
             },
          },
       ]);
