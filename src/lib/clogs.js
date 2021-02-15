@@ -32,7 +32,6 @@ module.exports = {
       hint(message, command) {
          if (store.getHints() === 'on') {
             console.log(whiteBright(message));
-            console.log(cyanBright(`$ quickrepo ${command}`));
             console.log(cyanBright(`$ qr ${command}`));
          }
       },

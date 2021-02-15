@@ -43,7 +43,7 @@ module.exports = {
    checkSetup() {
       if (!info.ranSetup) {
          log.warn('please run the setup first');
-         log.hint('to run the setup you can use either of the two commands:', 'setup');
+         log.hint('to setup your app you can run the below command:', 'setup');
          process.exit();
       }
    },

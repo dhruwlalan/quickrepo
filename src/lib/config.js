@@ -50,7 +50,7 @@ module.exports = {
             process.exit();
          }
          log.info('your app is already in its default state!');
-         log.hint('if you want to setup your app, run any one of the below two commands:', 'setup');
+         log.hint('if you want to setup your app, run the below command:', 'setup');
          process.exit();
       } catch (error) {
          console.log(error.message);

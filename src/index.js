@@ -26,6 +26,7 @@ program
    .command('view-config')
    .description('view all configs')
    .action(() => {
+      setup.checkSetup();
       config.viewConfig();
    });
 program
@@ -60,7 +61,7 @@ program
    });
 program
    .command('delete-token')
-   .description('view your stored github personal access token')
+   .description('delete your stored github personal access token')
    .action(async () => {
       setup.checkSetup();
       await token.deleteToken();
@@ -79,6 +80,5 @@ program
 program.version('1.0.0', '-v, --version', 'output the current version');
 ///help///
 program.name('qr').usage('[options] [command]');
-program.addHelpText('before', 'usage: quickrepo [options] [command]');
 program.parse(process.argv);
 if (!program.args.length) program.help();

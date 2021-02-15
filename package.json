@@ -4,7 +4,6 @@
    "description": "Quickly create a repository locally & also host it on github, all via the command line!",
    "main": "src/index.js",
    "bin": {
-      "quickrepo": "src/index.js",
       "qr": "src/index.js"
    },
    "engines": {
@@ -18,7 +17,7 @@
    },
    "repository": {
       "type": "git",
-      "url": "https://github.com/dhruwlalan/quickrepo.git"
+      "url": "https://github.com/dhruwlalan/quick-repository.git"
    },
    "keywords": [
       "commander",
@@ -32,9 +31,9 @@
    "author": "dhruw lalan <dhruwlalan22@gmail.com>",
    "license": "MIT",
    "bugs": {
-      "url": "https://github.com/dhruwlalan/quickrepo/issues"
+      "url": "https://github.com/dhruwlalan/quick-repository/issues"
    },
-   "homepage": "https://github.com/dhruwlalan/quickrepo#readme",
+   "homepage": "https://github.com/dhruwlalan/quick-repository#readme",
    "dependencies": {
       "@octokit/rest": "^18.1.0",
       "colorette": "^1.2.1",

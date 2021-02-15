@@ -13,7 +13,7 @@ module.exports = {
       const token = store.getToken();
       if (!token) {
          log.warn('you dont have a token stored in the app, add a token first');
-         log.hint('to add a token you can run either of the below two commands:', 'add-token');
+         log.hint('to add a token you can run the below command:', 'add-token');
          process.exit();
       }
       const spinner = ora(cyanB('verifying stored token...')).start();
@@ -28,12 +28,12 @@ module.exports = {
          }
          spinner.stop();
          log.error('your stored token has become invalid, try adding a new one');
-         log.hint('to add a token you can run either of the below two commands:', 'add-token');
+         log.hint('to add a token you can run the below command:', 'add-token');
          process.exit();
       } catch (error) {
          spinner.stop();
          log.error('your stored token has become invalid, try adding a new one');
-         log.hint('to add a token you can run either of the below two commands:', 'add-token');
+         log.hint('to add a token you can run the below command:', 'add-token');
          process.exit();
       }
    },

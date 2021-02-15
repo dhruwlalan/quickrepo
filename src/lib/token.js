@@ -9,7 +9,7 @@ module.exports = {
       const storedToken = store.getToken();
       if (!storedToken) {
          log.warn('you dont have a token stored in the app');
-         log.hint('to add a token you can run either of the below two commands:', 'add-token');
+         log.hint('to add a token you can run the below command:', 'add-token');
       } else {
          console.log(`${cyanB('token')} ${whiteB('—→')} ${greenB(storedToken)}`);
       }
@@ -74,10 +74,7 @@ module.exports = {
          } else {
             log.warn('the stored token has become invalid');
             log.info('kindly add a valid new token');
-            log.hint(
-               'to add a new token you can run either of the below two commands:',
-               'add-token',
-            );
+            log.hint('to add a new token you can run the below command:', 'add-token');
          }
          process.exit();
       } catch (error) {
@@ -88,7 +85,7 @@ module.exports = {
    async displayVerifyToken(token) {
       if (!token) {
          log.warn('you dont have a token stored in the app');
-         log.hint('to add a token you can run either of the below two commands:', 'add-token');
+         log.hint('to add a new token you can run the below command:', 'add-token');
          process.exit();
       }
       const spinner = ora(cyanB('verifying Token...')).start();
