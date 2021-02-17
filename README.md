@@ -16,12 +16,10 @@ $ npm install -g quick-repository
 Setup the app:
 > make sure you have generated the personal access token. It will be required here to connect with Github's API.
 ```
-$  quickrepo setup
 $  qr setup
 ```
 Create a repository:
 ```
-$  quickrepo init
 $  qr init
 ```
 ## License
