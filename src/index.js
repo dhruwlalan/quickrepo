@@ -39,7 +39,7 @@ program
 
 ///token///
 program
-   .command('add-token')
+   .command('new-token')
    .description('add new github personal access token')
    .action(async () => {
       setup.checkSetup();

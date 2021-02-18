@@ -16,19 +16,6 @@ module.exports = {
          const newUser = await token.displayVerifyToken(newToken);
          if (newUser) {
             store.setToken(newToken);
-            const { autoCommit, autoCommitMessage, hints } = await inquirer.askEditConfig();
-            store.setHints(hints);
-            if (autoCommit !== 'never') {
-               if (autoCommit === 'always') {
-                  store.setAutoCommit('always');
-               } else {
-                  store.setAutoCommit('ask each time');
-               }
-               store.setAutoCommitMessage(autoCommitMessage);
-            } else {
-               store.setAutoCommit('never');
-               store.setAutoCommitMessage(autoCommitMessage);
-            }
             store.ranSetup(true);
             log.success('setup complete!');
             process.exit();
