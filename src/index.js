@@ -77,7 +77,7 @@ program
    });
 
 ///version///
-program.version('1.0.0', '-v, --version', 'output the current version');
+program.version('1.0.3', '-v, --version', 'output the current version');
 ///help///
 program.name('qr').usage('[options] [command]');
 program.parse(process.argv);
