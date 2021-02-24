@@ -84,7 +84,7 @@ updateNotifier({
       name,
       version,
    },
-   updateCheckInterval: 0,
+   updateCheckInterval: 1000 * 60 * 60 * 24,
 }).notify();
 program.version(`${version}`, '-v, --version', 'output the current version');
 ///help///
