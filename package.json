@@ -13,7 +13,7 @@
       "src"
    ],
    "scripts": {
-      "start": "node ./src/index.js init"
+      "start": "node ./src/index.js -v"
    },
    "repository": {
       "type": "git",

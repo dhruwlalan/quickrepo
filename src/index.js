@@ -7,8 +7,7 @@ const setup = require('./lib/setup');
 const config = require('./lib/config');
 const token = require('./lib/token');
 const repo = require('./lib/repo');
-const pkg = require('../package.json');
-const { version } = require('../package.json');
+const { name, version } = require('../package.json');
 
 ///setup///
 program
@@ -80,7 +79,13 @@ program
    });
 
 ///version///
-updateNotifier({ pkg }).notify();
+updateNotifier({
+   pkg: {
+      name,
+      version,
+   },
+   updateCheckInterval: 0,
+}).notify();
 program.version(`${version}`, '-v, --version', 'output the current version');
 ///help///
 program.name('qr').usage('[options] [command]');
