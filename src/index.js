@@ -85,7 +85,7 @@ updateNotifier({
       version,
    },
    updateCheckInterval: 1000 * 60 * 60 * 24,
-}).notify();
+}).notify({ isGlobal: true });
 program.version(`${version}`, '-v, --version', 'output the current version');
 ///help///
 program.name('qr').usage('[options] [command]');
