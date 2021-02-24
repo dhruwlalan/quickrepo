@@ -2,10 +2,13 @@
 
 require('./lib/info');
 const { program } = require('commander');
+const updateNotifier = require('update-notifier');
 const setup = require('./lib/setup');
 const config = require('./lib/config');
 const token = require('./lib/token');
 const repo = require('./lib/repo');
+const pkg = require('../package.json');
+const { version } = require('../package.json');
 
 ///setup///
 program
@@ -77,7 +80,8 @@ program
    });
 
 ///version///
-program.version('1.0.3', '-v, --version', 'output the current version');
+updateNotifier({ pkg }).notify();
+program.version(`${version}`, '-v, --version', 'output the current version');
 ///help///
 program.name('qr').usage('[options] [command]');
 program.parse(process.argv);
