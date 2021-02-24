@@ -47,17 +47,17 @@ push the local branch to the repository created on github & will also track the 
 
 ## Available Commands
 
-| command           | description                                            |
-| ----------------- | ------------------------------------------------------ |
-| `qr setup`        | To setup the app.                                      |
-| `qr reset`        | To reset the app.                                      |
-| `qr view-config`  | To view the app configurations.                        |
-| `qr edit-config`  | To edit the app configurations.                        |
-| `qr new-token`    | To add a new github personal access token to the app.  |
-| `qr view-token`   | To view the stored token.                              |
-| `qr verify-token` | To verify the stored token if its valid or invalid.    |
-| `qr delete-token` | To delete the stored token.                            |
-| `qr init`         | To initialize a repository & also create it on github. |
+| command           | description                                              |
+| ----------------- | -------------------------------------------------------- |
+| `qr setup`        | To setup the app.                                        |
+| `qr reset`        | To reset the app.                                        |
+| `qr view-config`  | To view the app configurations.                          |
+| `qr edit-config`  | To edit the app configurations.                          |
+| `qr new-token`    | To add a new github personal access token to the app.    |
+| `qr view-token`   | To view the stored token.                                |
+| `qr verify-token` | To verify the stored token if its valid or invalid.      |
+| `qr delete-token` | To delete the stored token.                              |
+| `qr init`         | To initialize and host a repository locally & on github. |
 
 ## License
 
