@@ -2,10 +2,10 @@ const { Octokit } = require('@octokit/rest');
 const shell = require('shelljs');
 const ora = require('ora');
 const logUpdate = require('log-update');
-const info = require('./info');
-const { log, cyanB } = require('./clogs');
-const inquirer = require('./inquirer');
-const store = require('./store');
+const info = require('../utils/info');
+const { log, cyanB } = require('../utils/clogs');
+const inquirer = require('../utils/inquirer');
+const store = require('../utils/store');
 
 module.exports = {
    // Repo Stuff..

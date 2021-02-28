@@ -1,12 +1,10 @@
-#!/usr/bin/env node
-
-require('./lib/info');
+require('./utils/info');
 const { program } = require('commander');
 const updateNotifier = require('update-notifier');
-const setup = require('./lib/setup');
-const config = require('./lib/config');
-const token = require('./lib/token');
-const repo = require('./lib/repo');
+const setup = require('./commands/setup');
+const config = require('./commands/config');
+const token = require('./commands/token');
+const repo = require('./commands/repo');
 const { name, version } = require('../package.json');
 
 ///setup///

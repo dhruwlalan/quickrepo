@@ -1,7 +1,7 @@
-const inquirer = require('./inquirer');
-const store = require('./store');
-const info = require('./info');
-const { whiteB, greenB, cyanB, log } = require('./clogs');
+const inquirer = require('../utils/inquirer');
+const store = require('../utils/store');
+const info = require('../utils/info');
+const { whiteB, greenB, cyanB, log } = require('../utils/clogs');
 
 module.exports = {
    viewConfig() {

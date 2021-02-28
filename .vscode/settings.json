@@ -1,5 +1,6 @@
 {
    "editor.formatOnSave": false,
+   "editor.formatOnType": false,
    "[javascript]": {
       "editor.formatOnSave": false
    },

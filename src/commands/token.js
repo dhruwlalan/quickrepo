@@ -1,8 +1,8 @@
 const { Octokit } = require('@octokit/rest');
 const ora = require('ora');
-const { whiteB, blueB, greenB, cyanB, log } = require('./clogs');
-const inquirer = require('./inquirer');
-const store = require('./store');
+const { whiteB, blueB, greenB, cyanB, log } = require('../utils/clogs');
+const inquirer = require('../utils/inquirer');
+const store = require('../utils/store');
 
 module.exports = {
    viewToken() {

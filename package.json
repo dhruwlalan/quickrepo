@@ -2,9 +2,9 @@
    "name": "quick-repository",
    "version": "1.1.4",
    "description": "Quickly create a repository locally & also host it on github, all via the command line!",
-   "main": "src/index.js",
+   "main": "bin/quickrepository.js",
    "bin": {
-      "qr": "src/index.js"
+      "qr": "bin/quickrepository.js"
    },
    "engines": {
       "node": ">=10"
@@ -13,7 +13,9 @@
       "src"
    ],
    "scripts": {
-      "start": "node ./src/index.js -v"
+      "start": "node ./src/index.js -v",
+      "build": "babel src --out-dir lib",
+      "build:watch": "babel --watch src --out-dir lib"
    },
    "repository": {
       "type": "git",
@@ -46,6 +48,9 @@
       "update-notifier": "^5.1.0"
    },
    "devDependencies": {
+      "@babel/cli": "^7.13.0",
+      "@babel/core": "^7.13.8",
+      "@babel/preset-env": "^7.13.8",
       "eslint": "^7.19.0",
       "eslint-config-airbnb-base": "^14.2.1",
       "eslint-config-prettier": "^7.2.0",
