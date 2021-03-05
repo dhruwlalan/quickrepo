@@ -1,14 +1,13 @@
 const { Octokit } = require('@octokit/rest');
-const shell = require('shelljs');
 const ora = require('ora');
-const logUpdate = require('log-update');
+const execa = require('execa');
+
 const info = require('../utils/info');
 const { log, cyanB } = require('../utils/clogs');
 const inquirer = require('../utils/inquirer');
 const store = require('../utils/store');
 
 module.exports = {
-   // Repo Stuff..
    async createOctokitInstance() {
       const token = store.getToken();
       if (!token) {
@@ -38,6 +37,7 @@ module.exports = {
       }
    },
    async createRepository() {
+      const spinner = ora(cyanB('creating remote repository...'));
       if (info.isGitRepo) {
          log.warn('current directory is already a git repository!');
          process.exit();
@@ -45,19 +45,20 @@ module.exports = {
       try {
          const octokit = await this.createOctokitInstance();
          const answers = await inquirer.askRemoteRepositoryDetails();
-         logUpdate(cyanB('creating remote repository...'));
+         spinner.start();
          const { data } = await octokit.repos.createForAuthenticatedUser({
             name: answers.name,
             description: answers.description,
             private: answers.visibility === 'private',
          });
-         logUpdate.clear();
+         spinner.stop();
          const res = await this.createLocalRepository(data.ssh_url);
          if (res) {
             log.success('created repository successfully!');
          }
          process.exit();
       } catch (error) {
+         spinner.stop();
          if (error.status === 422) {
             log.error(`unable to create repository: name already exists!`);
          } else {
@@ -68,32 +69,49 @@ module.exports = {
       }
    },
    async createLocalRepository(url) {
+      const spinner = ora();
       try {
-         shell.exec('git init', { silent: true });
-         shell.exec(`git remote add origin ${url}`, { silent: true });
-         if (store.getAutoCommit() !== 'never') {
-            if (info.containsContent) {
-               if (store.getAutoCommit() !== 'always') {
-                  const { initialCommit } = await inquirer.askToCreateInitialCommit();
-                  if (initialCommit) {
-                     const { initialCommitMessage } = await inquirer.askInitialCommitMessage();
-                     store.setAutoCommitMessage(initialCommitMessage);
-                  } else {
-                     return true;
-                  }
-               }
-               logUpdate(cyanB('pushing local repository...'));
-               shell.exec('git add .', { silent: true });
-               shell.exec(`git commit -m "${store.getAutoCommitMessage()}"`, { silent: true });
-               shell.exec('git branch -M master', { silent: true });
-               shell.exec('git push -u origin master', { silent: true });
-               logUpdate.clear();
-            }
+         if (!info.containsContent) {
+            spinner.start(cyanB('creating local repository...'));
+            await execa('git', ['init']);
+            await execa('git', ['remote', 'add', 'origin', `${url}`]);
+            await this.hold(1000);
+            spinner.stop();
             return true;
          }
-         return true;
+         if (store.getAutoCommit() !== 'never') {
+            if (store.getAutoCommit() !== 'always') {
+               const { initialCommit } = await inquirer.askToCreateInitialCommit();
+               if (initialCommit) {
+                  const { initialCommitMessage } = await inquirer.askInitialCommitMessage();
+                  store.setAutoCommitMessage(initialCommitMessage);
+               } else {
+                  return true;
+               }
+            }
+            spinner.start(cyanB('creating local repository...'));
+            await execa('git', ['init']);
+            await execa('git', ['add', '.']);
+            await execa('git', ['commit', '-m', `${store.getAutoCommitMessage()}`]);
+            await execa('git', ['remote', 'add', 'origin', `${url}`]);
+            await execa('git', ['branch', '-M', 'master']);
+            await this.hold(2000);
+            spinner.text = cyanB('pushing local repository to remote...');
+            await execa('git', ['push', '-u', 'origin', 'master']);
+            spinner.stop();
+            return true;
+         }
       } catch (error) {
+         spinner.stop();
          throw new Error(error.message);
       }
+      return true;
+   },
+   hold(ms) {
+      return new Promise((resolve) => {
+         setTimeout(() => {
+            resolve(true);
+         }, ms);
+      });
    },
 };

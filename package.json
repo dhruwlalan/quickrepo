@@ -2,7 +2,7 @@
    "name": "quick-repository",
    "version": "1.1.4",
    "description": "Quickly create a repository locally & also host it on github, all via the command line!",
-   "main": "bin/quickrepository.js",
+   "main": "lib/index.js",
    "bin": {
       "qr": "bin/quickrepository.js"
    },
@@ -10,12 +10,11 @@
       "node": ">=10"
    },
    "files": [
-      "src"
+      "lib"
    ],
    "scripts": {
-      "start": "node ./src/index.js -v",
-      "build": "babel src --out-dir lib",
-      "build:watch": "babel --watch src --out-dir lib"
+      "start": "babel --watch src --out-dir lib",
+      "build": "babel src --out-dir lib"
    },
    "repository": {
       "type": "git",
@@ -41,10 +40,9 @@
       "colorette": "^1.2.1",
       "commander": "^7.0.0",
       "configstore": "^5.0.1",
+      "execa": "^5.0.0",
       "inquirer": "^7.3.3",
-      "log-update": "^4.0.0",
       "ora": "^5.3.0",
-      "shelljs": "^0.8.4",
       "update-notifier": "^5.1.0"
    },
    "devDependencies": {

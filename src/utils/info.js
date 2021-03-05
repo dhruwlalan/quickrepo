@@ -1,11 +1,17 @@
 const fs = require('fs');
 const path = require('path');
-const shell = require('shelljs');
+const execa = require('execa');
 const store = require('./store');
 
 const cwd = process.cwd();
-const code = shell.exec('git rev-parse --is-inside-work-tree', { silent: true }).code;
 const fileObjs = fs.readdirSync(cwd);
+
+let code = 0;
+try {
+   code = execa.sync('git', ['rev-parse', '--is-inside-work-tree']).exitCode;
+} catch (error) {
+   code = 128;
+}
 
 module.exports = {
    ranSetup: store.ranSetup(),
