@@ -1,54 +1,56 @@
 const ConfigStore = require('configstore');
 const pkg = require('../../package.json');
 
-const config = new ConfigStore(pkg.name);
-if (!config.has('ranSetup')) config.set('ranSetup', false);
-if (!config.has('token')) config.set('token', null);
-if (!config.has('autoCommit')) config.set('autoCommit', 'ask each time');
-if (!config.has('autoCommitMessage')) config.set('autoCommitMessage', 'Initial Commit');
-if (!config.has('hints')) config.set('hints', 'on');
+const store = new ConfigStore(pkg.name);
+
+// default settings
+if (!store.has('ranSetup')) store.set('ranSetup', false);
+if (!store.has('token')) store.set('token', null);
+if (!store.has('autoCommit')) store.set('autoCommit', 'ask each time');
+if (!store.has('autoCommitMessage')) store.set('autoCommitMessage', 'Initial Commit');
+if (!store.has('hints')) store.set('hints', 'on');
 
 module.exports = {
    viewConfig() {
-      return config.all;
+      return store.all;
    },
    clearConfig() {
-      config.clear();
+      store.clear();
    },
 
    ranSetup(completed) {
       if (completed) {
-         config.set('ranSetup', true);
+         store.set('ranSetup', true);
       } else {
-         return config.get('ranSetup');
+         return store.get('ranSetup');
       }
    },
 
    getToken() {
-      return config.get('token');
+      return store.get('token');
    },
    setToken(token) {
-      config.set('token', token);
+      store.set('token', token);
    },
 
    getAutoCommit() {
-      return config.get('autoCommit');
+      return store.get('autoCommit');
    },
    setAutoCommit(value) {
-      config.set('autoCommit', value);
+      store.set('autoCommit', value);
    },
 
    getAutoCommitMessage() {
-      return config.get('autoCommitMessage');
+      return store.get('autoCommitMessage');
    },
    setAutoCommitMessage(value) {
-      config.set('autoCommitMessage', value);
+      store.set('autoCommitMessage', value);
    },
 
    getHints() {
-      return config.get('hints');
+      return store.get('hints');
    },
    setHints(value) {
-      config.set('hints', value);
+      store.set('hints', value);
    },
 };
