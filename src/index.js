@@ -1,11 +1,23 @@
 require('./utils/info');
+
 const { program } = require('commander');
 const updateNotifier = require('update-notifier');
+
+const { name, version } = require('../package.json');
 const setup = require('./commands/setup');
 const config = require('./commands/config');
 const token = require('./commands/token');
 const repo = require('./commands/repo');
-const { name, version } = require('../package.json');
+
+///version///
+updateNotifier({
+   pkg: {
+      name,
+      version,
+   },
+   updateCheckInterval: 1000 * 60 * 60 * 24,
+}).notify({ isGlobal: true });
+program.version(`${version}`, '-v, --version', 'output the current version');
 
 ///setup///
 program
@@ -76,15 +88,6 @@ program
       await repo.createRepository();
    });
 
-///version///
-updateNotifier({
-   pkg: {
-      name,
-      version,
-   },
-   updateCheckInterval: 1000 * 60 * 60 * 24,
-}).notify({ isGlobal: true });
-program.version(`${version}`, '-v, --version', 'output the current version');
 ///help///
 program.name('qr').usage('[options] [command]');
 program.parse(process.argv);
