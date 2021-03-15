@@ -51,8 +51,8 @@ program
 
 ///token///
 program
-   .command('new-token')
-   .description('add new github personal access token')
+   .command('add-token')
+   .description('add a new github personal access token')
    .action(async () => {
       setup.checkSetup();
       await token.addNewToken();
@@ -82,7 +82,7 @@ program
 ///repo///
 program
    .command('init')
-   .description('create repository')
+   .description('create & host repository')
    .action(async () => {
       setup.checkSetup();
       await repo.createRepository();

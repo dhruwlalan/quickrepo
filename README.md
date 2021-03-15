@@ -53,7 +53,7 @@ push the local branch to the repository created on github & will also track the 
 | `qr reset`        | To reset the app.                                        |
 | `qr view-config`  | To view the app configurations.                          |
 | `qr edit-config`  | To edit the app configurations.                          |
-| `qr new-token`    | To add a new github personal access token to the app.    |
+| `qr add-token`    | To add a new github personal access token to the app.    |
 | `qr view-token`   | To view the stored token.                                |
 | `qr verify-token` | To verify the stored token if its valid or invalid.      |
 | `qr delete-token` | To delete the stored token.                              |
