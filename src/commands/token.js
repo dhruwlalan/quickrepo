@@ -10,10 +10,10 @@ module.exports = {
       if (!storedToken) {
          log.warn('you dont have a token stored in the app');
          log.hint('to add a token you can run the below command:', 'add-token');
-      } else {
-         console.log(`${cyanB('token')} ${whiteB('—→')} ${greenB(storedToken)}`);
+         process.exit(1);
       }
-      process.exit();
+      console.log(`${cyanB('token')}${whiteB(':')} ${greenB(storedToken)}`);
+      process.exit(0);
    },
    async addNewToken() {
       try {
@@ -24,7 +24,7 @@ module.exports = {
             log.warn('you already have a valid stored token, adding a new one would replace it');
             const { confirmNewToken } = await inquirer.askConfirmNewToken();
             if (!confirmNewToken) {
-               process.exit();
+               process.exit(0);
             }
          }
          const { newToken } = await inquirer.askAddNewToken();
@@ -33,10 +33,10 @@ module.exports = {
             store.setToken(newToken);
             log.success('token added successfully!');
          }
-         process.exit();
+         process.exit(0);
       } catch (error) {
          console.log(error.message);
-         process.exit();
+         process.exit(1);
       }
    },
    async deleteToken() {
@@ -47,7 +47,7 @@ module.exports = {
 
          if (user === 'not-stored') {
             log.warn('you dont have a token stored in the app to delete');
-            process.exit();
+            process.exit(1);
          } else if (user && user !== 'not-stored') {
             log.warn('you already have a valid stored token');
          } else {
@@ -59,34 +59,35 @@ module.exports = {
             store.setToken(null);
             log.success('token deleted successfully!');
          }
-         process.exit();
+         process.exit(0);
       } catch (error) {
          console.log(error.message);
-         process.exit();
+         process.exit(1);
       }
    },
    async getUserFromToken() {
       try {
          const user = await this.displayVerifyToken(store.getToken());
          if (user) {
-            console.log(`${blueB('username')} ${whiteB('—→')} ${cyanB(user.login)}`);
-            console.log(`${blueB('github-url')} ${whiteB('—→')} ${cyanB(user.html_url)}`);
+            console.log(`${blueB('username')}${whiteB(':')} ${cyanB(user.login)}`);
+            console.log(`${blueB('github-url')}${whiteB(':')} ${cyanB(user.html_url)}`);
+            process.exit(0);
          } else {
             log.warn('the stored token has become invalid');
             log.info('kindly add a valid new token');
             log.hint('to add a new token you can run the below command:', 'add-token');
+            process.exit(1);
          }
-         process.exit();
       } catch (error) {
          console.log(error.message);
-         process.exit();
+         process.exit(1);
       }
    },
    async displayVerifyToken(token) {
       if (!token) {
          log.warn('you dont have a token stored in the app');
          log.hint('to add a new token you can run the below command:', 'add-token');
-         process.exit();
+         process.exit(1);
       }
       const spinner = ora(cyanB('verifying Token...')).start();
       const user = await this.verifyToken(token);

@@ -24,7 +24,7 @@ program
    .command('setup')
    .description('initial basic app setup')
    .action(async () => {
-      await setup.appSetup();
+      await setup.runSetup();
    });
 program
    .command('reset')

@@ -5,15 +5,16 @@ const { whiteB, greenB, cyanB, log } = require('../utils/clogs');
 
 module.exports = {
    viewConfig() {
-      const allConfigs = Object.entries(store.viewConfig());
-      allConfigs.forEach((conf) => {
-         if (conf[0] !== 'ranSetup' && conf[0] !== 'token') {
-            if (conf[0] === 'autoCommitMessage' && store.getAutoCommit() === 'never') {
+      const configs = Object.entries(store.getConfig());
+      configs.forEach((config) => {
+         if (config[0] !== 'ranSetup' && config[0] !== 'token') {
+            if (config[0] === 'autoCommitMessage' && store.getAutoCommit() === 'never') {
                return;
             }
-            console.log(`${cyanB(conf[0])} ${whiteB('—→')} ${greenB(conf[1])}`);
+            console.log(`${cyanB(config[0])}${whiteB(':')} ${greenB(config[1])}`);
          }
       });
+      process.exit(0);
    },
    async editConfig() {
       try {
@@ -32,10 +33,10 @@ module.exports = {
             store.setAutoCommitMessage(autoCommitMessage);
             log.success('edited config successfully!');
          }
-         process.exit();
+         process.exit(0);
       } catch (error) {
          console.log(error.message);
-         process.exit();
+         process.exit(1);
       }
    },
    async resetConfig() {
@@ -47,14 +48,14 @@ module.exports = {
                store.clearConfig();
                log.success('app reseted successfully!');
             }
-            process.exit();
+            process.exit(0);
          }
-         log.info('your app is already in its default state!');
+         log.info('your app has never been setted up!');
          log.hint('if you want to setup your app, run the below command:', 'setup');
-         process.exit();
+         process.exit(0);
       } catch (error) {
          console.log(error.message);
-         process.exit();
+         process.exit(1);
       }
    },
 };

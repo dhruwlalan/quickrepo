@@ -11,7 +11,7 @@ if (!store.has('autoCommitMessage')) store.set('autoCommitMessage', 'Initial Com
 if (!store.has('hints')) store.set('hints', 'on');
 
 module.exports = {
-   viewConfig() {
+   getConfig() {
       return store.all;
    },
    clearConfig() {

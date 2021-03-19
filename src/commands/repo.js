@@ -13,7 +13,7 @@ module.exports = {
       if (!token) {
          log.warn('you dont have a token stored in the app, add a token first');
          log.hint('to add a token you can run the below command:', 'add-token');
-         process.exit();
+         process.exit(1);
       }
       const spinner = ora(cyanB('verifying stored token...')).start();
       try {
@@ -28,19 +28,19 @@ module.exports = {
          spinner.stop();
          log.error('your stored token has become invalid, try adding a new one');
          log.hint('to add a token you can run the below command:', 'add-token');
-         process.exit();
+         process.exit(1);
       } catch (error) {
          spinner.stop();
          log.error('your stored token has become invalid, try adding a new one');
          log.hint('to add a token you can run the below command:', 'add-token');
-         process.exit();
+         process.exit(1);
       }
    },
    async createRepository() {
       const spinner = ora(cyanB('creating remote repository...'));
       if (info.isGitRepo) {
          log.warn('current directory is already a git repository!');
-         process.exit();
+         process.exit(1);
       }
       try {
          const octokit = await this.createOctokitInstance();
@@ -56,7 +56,7 @@ module.exports = {
          if (res) {
             log.success('created repository successfully!');
          }
-         process.exit();
+         process.exit(0);
       } catch (error) {
          spinner.stop();
          if (error.status === 422) {
@@ -65,7 +65,7 @@ module.exports = {
             log.error(`error code: ${error.status}`);
             log.error(error.message);
          }
-         process.exit();
+         process.exit(1);
       }
    },
    async createLocalRepository(url) {
