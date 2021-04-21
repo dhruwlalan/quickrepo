@@ -1,8 +1,8 @@
-const inquirer = require('inquirer');
-const info = require('./info');
-const store = require('./store');
+import inquirer from 'inquirer';
+import info from './info';
+import store from './store';
 
-module.exports = {
+export default {
    // App Setup...
    askRerunSetup() {
       return inquirer.prompt([
