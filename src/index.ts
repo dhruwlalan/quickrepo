@@ -1,13 +1,13 @@
 require('./utils/info');
 
-const { program } = require('commander');
-const updateNotifier = require('update-notifier');
+import { program } from 'commander';
+import updateNotifier from 'update-notifier';
 
-const { name, version } = require('../package.json');
-const setup = require('./commands/setup');
-const config = require('./commands/config');
-const token = require('./commands/token');
-const repo = require('./commands/repo');
+import { name, version } from '../package.json';
+import setup from './commands/setup';
+import config from './commands/config';
+import token from './commands/token';
+import repo from './commands/repo';
 
 ///version///
 updateNotifier({
@@ -89,6 +89,6 @@ program
    });
 
 ///help///
-program.name('qr').usage('[options] [command]');
+program.name('qr').usage('[option] [command]');
 program.parse(process.argv);
 if (!program.args.length) program.help();

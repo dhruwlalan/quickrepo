@@ -1,13 +1,13 @@
-const { Octokit } = require('@octokit/rest');
-const ora = require('ora');
-const execa = require('execa');
+import { Octokit } from '@octokit/rest';
+import ora from 'ora';
+import execa from 'execa';
 
-const info = require('../utils/info');
-const { log, cyanB } = require('../utils/clogs');
-const inquirer = require('../utils/inquirer');
-const store = require('../utils/store');
+import info from '../utils/info';
+import { log, cyanB } from '../utils/clogs';
+import inquirer from '../utils/inquirer';
+import store from '../utils/store';
 
-module.exports = {
+export default {
    async createOctokitInstance() {
       const token = store.getToken();
       if (!token) {
@@ -68,7 +68,7 @@ module.exports = {
          process.exit(1);
       }
    },
-   async createLocalRepository(url) {
+   async createLocalRepository(url: any) {
       const spinner = ora();
       try {
          if (!info.containsContent) {
@@ -107,7 +107,7 @@ module.exports = {
       }
       return true;
    },
-   hold(ms) {
+   hold(ms: number) {
       return new Promise((resolve) => {
          setTimeout(() => {
             resolve(true);

@@ -1,7 +1,7 @@
-const fs = require('fs');
-const path = require('path');
-const execa = require('execa');
-const store = require('./store');
+import fs from 'fs';
+import path from 'path';
+import execa from 'execa';
+import store from './store';
 
 const cwd = process.cwd();
 const fileObjs = fs.readdirSync(cwd);
@@ -13,7 +13,7 @@ try {
    code = 128;
 }
 
-module.exports = {
+export default {
    ranSetup: store.ranSetup(),
    directoryBase: path.basename(cwd),
    isGitRepo: code === 0,

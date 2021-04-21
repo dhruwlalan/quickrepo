@@ -1,11 +1,16 @@
 module.exports = {
-   extends: ['airbnb-base', 'prettier'],
+   parser: '@typescript-eslint/parser',
+   extends: [
+      'plugin:@typescript-eslint/recommended',
+      'prettier/@typescript-eslint',
+      'plugin:prettier/recommended',
+   ],
+   plugins: ['prettier'],
    env: {
       es2021: true,
-      browser: true,
       node: true,
    },
-   ignorePatterns: ['node_modules'],
+   ignorePatterns: ['node_modules', 'lib'],
    parserOptions: {
       ecmaVersion: 2021,
       sourceType: 'module',
@@ -14,30 +19,8 @@ module.exports = {
       },
    },
    rules: {
-      'no-console': 0,
-      'guard-for-in': 0,
-      'no-restricted-syntax': 0,
-      'no-plusplus': 0,
-      'no-alert': 0,
-      'no-unused-vars': 0,
-      'spaced-comment': 0,
-      'consistent-return': 0,
-      'no-param-reassign': 0,
-      'no-underscore-dangle': 0,
-      'class-methods-use-this': 0,
-      'func-names': 0,
-      'prefer-destructuring': 0,
-      quotes: [
-         2,
-         'single',
-         {
-            avoidEscape: true,
-            allowTemplateLiterals: true,
-         },
-      ],
-      'import/no-extraneous-dependencies': 0,
-      'import/no-unresolved': 0,
-      'global-require': 0,
+      '@typescript-eslint/no-explicit-any': 0,
+      '@typescript-eslint/explicit-module-boundary-types': 0,
       'prettier/prettier': [
          'error',
          {
@@ -48,5 +31,4 @@ module.exports = {
          },
       ],
    },
-   plugins: ['prettier'],
 };

@@ -1,10 +1,10 @@
-const { Octokit } = require('@octokit/rest');
-const ora = require('ora');
-const { whiteB, blueB, greenB, cyanB, log } = require('../utils/clogs');
-const inquirer = require('../utils/inquirer');
-const store = require('../utils/store');
+import { Octokit } from '@octokit/rest';
+import ora from 'ora';
+import { whiteB, blueB, greenB, cyanB, log } from '../utils/clogs';
+import inquirer from '../utils/inquirer';
+import store from '../utils/store';
 
-module.exports = {
+export default {
    viewToken() {
       const storedToken = store.getToken();
       if (!storedToken) {
@@ -83,7 +83,7 @@ module.exports = {
          process.exit(1);
       }
    },
-   async displayVerifyToken(token) {
+   async displayVerifyToken(token: any) {
       if (!token) {
          log.warn('you dont have a token stored in the app');
          log.hint('to add a new token you can run the below command:', 'add-token');
@@ -100,7 +100,7 @@ module.exports = {
       log.error('token is invalid!');
       return false;
    },
-   async verifyToken(token) {
+   async verifyToken(token: any) {
       if (!token) {
          return 'not-stored';
       }

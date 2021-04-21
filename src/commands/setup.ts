@@ -1,10 +1,10 @@
-const token = require('./token');
-const { log } = require('../utils/clogs');
-const inquirer = require('../utils/inquirer');
-const store = require('../utils/store');
-const info = require('../utils/info');
+import token from './token';
+import { log } from '../utils/clogs';
+import inquirer from '../utils/inquirer';
+import store from '../utils/store';
+import info from '../utils/info';
 
-module.exports = {
+export default {
    async runSetup() {
       try {
          if (info.ranSetup) {

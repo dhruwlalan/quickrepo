@@ -1,12 +1,12 @@
-const inquirer = require('../utils/inquirer');
-const store = require('../utils/store');
-const info = require('../utils/info');
-const { whiteB, greenB, cyanB, log } = require('../utils/clogs');
+import inquirer from '../utils/inquirer';
+import store from '../utils/store';
+import info from '../utils/info';
+import { whiteB, greenB, cyanB, log } from '../utils/clogs';
 
-module.exports = {
+export default {
    viewConfig() {
-      const configs = Object.entries(store.getConfig());
-      configs.forEach((config) => {
+      const configs: any = Object.entries(store.getConfig());
+      configs.forEach((config: string[]) => {
          if (config[0] !== 'ranSetup' && config[0] !== 'token') {
             if (config[0] === 'autoCommitMessage' && store.getAutoCommit() === 'never') {
                return;
@@ -42,7 +42,7 @@ module.exports = {
    async resetConfig() {
       try {
          if (info.ranSetup) {
-            log.warn('reseting app will clear your stored token & your configs');
+            log.warn('resetting app will clear your stored token & your configs');
             const { resetConfig } = await inquirer.askResetConfig();
             if (resetConfig) {
                store.clearConfig();
