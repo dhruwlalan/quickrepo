@@ -1,8 +1,8 @@
-export default async function (fn: any) {
+export default (fn: any) => () => {
    try {
-      await fn();
+      fn();
    } catch (error) {
       console.log('MyError:', error.message);
       process.exit(1);
    }
-}
+};

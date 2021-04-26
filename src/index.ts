@@ -4,7 +4,7 @@ import { program } from 'commander';
 import updateNotifier from 'update-notifier';
 
 import { name, version } from '../package.json';
-import runSetup from './commands/setup';
+import { runSetup } from './commands/setup';
 // import repo from './commands/repo';
 
 ///version///

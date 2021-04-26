@@ -8,7 +8,7 @@ interface Store {
 }
 
 // default settings
-if (!store.has('token')) store.set('token', null);
+if (!store.has('token')) store.set('token', '');
 
 export default {
    getConfig(): Store {
