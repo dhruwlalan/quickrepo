@@ -1,24 +1,21 @@
 import * as colorette from 'colorette';
-import store from './store';
 
 export const log = {
-   success(output: any) {
+   success(output: string) {
       console.log(colorette.bold(colorette.green(`✔ ${output}`)));
    },
-   error(output: any) {
+   error(output: string) {
       console.log(colorette.bold(colorette.red(`✖ ${output}`)));
    },
    info(output: string) {
       console.log(colorette.bold(colorette.cyan(output)));
    },
-   warn(output: any) {
+   warn(output: string) {
       console.log(colorette.yellowBright(`⚠ ${output} ⚠`));
    },
-   hint(message: string, command: any) {
-      if (store.getHints() === 'on') {
-         console.log(colorette.whiteBright(message));
-         console.log(colorette.cyanBright(`$ qr ${command}`));
-      }
+   hint(message: string, command: string) {
+      console.log(colorette.whiteBright(message));
+      console.log(colorette.cyanBright(`$ qr ${command}`));
    },
 };
 

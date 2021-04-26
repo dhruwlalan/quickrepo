@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import execa from 'execa';
-import store from './store';
 
 const cwd = process.cwd();
 const fileObjs = fs.readdirSync(cwd);
@@ -14,7 +13,6 @@ try {
 }
 
 export default {
-   ranSetup: store.ranSetup(),
    directoryBase: path.basename(cwd),
    isGitRepo: code === 0,
    containsContent: fileObjs.length > 0,
