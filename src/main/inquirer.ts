@@ -3,10 +3,10 @@ import inquirer from 'inquirer';
 
 export default {
    // setup
-   askAddToken(newToken?: boolean): Promise<{ addToken: string }> {
+   askAddToken(newToken?: boolean): Promise<{ token: string }> {
       return inquirer.prompt([
          {
-            name: 'addToken',
+            name: 'token',
             type: 'input',
             message: newToken
                ? 'enter a new personal access token:'
@@ -20,10 +20,10 @@ export default {
          },
       ]);
    },
-   askConfirmAddNewToken(): Promise<{ confirmAddNewToken: boolean }> {
+   askConfirmAddNewToken(): Promise<{ addNewToken: boolean }> {
       return inquirer.prompt([
          {
-            name: 'confirmAddNewToken',
+            name: 'addNewToken',
             type: 'confirm',
             message:
                'are you sure you want to add a new personal access token:',

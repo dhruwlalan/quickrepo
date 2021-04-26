@@ -5,7 +5,8 @@ import updateNotifier from 'update-notifier';
 
 import { name, version } from '../package.json';
 import { runSetup } from './commands/setup';
-// import repo from './commands/repo';
+import { verifyStoredToken } from './commands/verify';
+// import init from './commands/init';
 
 ///version///
 updateNotifier({
@@ -17,15 +18,20 @@ updateNotifier({
 }).notify({
    isGlobal: true,
 });
+program.name('qr').usage('[option] [command]');
 program.version(`${version}`, '-v, --version', 'output the current version');
 
-///setup///
+///commands///
 program
    .command('setup')
-   .description('initial basic app setup')
+   .description('setup personal access token for the app')
    .action(() => runSetup());
 
-///repo///
+program
+   .command('verify')
+   .description('verify the stored personal access token')
+   .action(() => verifyStoredToken());
+
 // program
 //    .command('init')
 //    .description('create & host repository')
@@ -35,6 +41,5 @@ program
 //    });
 
 ///help///
-program.name('qr').usage('[option] [command]');
 program.parse(process.argv);
 if (!program.args.length) program.help();
