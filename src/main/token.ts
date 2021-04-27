@@ -10,6 +10,11 @@ interface User {
    githubUrl: string;
 }
 
+export function noTokenStored() {
+   if (config.getToken() !== '') return false;
+   return true;
+}
+
 export async function verifyToken(token: string): Promise<User | false> {
    try {
       const octokit = new Octokit({ auth: token });

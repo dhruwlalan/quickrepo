@@ -6,7 +6,7 @@ import updateNotifier from 'update-notifier';
 import { name, version } from '../package.json';
 import { runSetup } from './commands/setup';
 import { verifyStoredToken } from './commands/verify';
-// import init from './commands/init';
+import { createRepo } from './commands/init';
 
 ///version///
 updateNotifier({
@@ -32,13 +32,10 @@ program
    .description('verify the stored personal access token')
    .action(() => verifyStoredToken());
 
-// program
-//    .command('init')
-//    .description('create & host repository')
-//    .action(async () => {
-//       setup.checkSetup();
-//       await repo.createRepository();
-//    });
+program
+   .command('init')
+   .description('create & host repository')
+   .action(() => createRepo());
 
 ///help///
 program.parse(process.argv);

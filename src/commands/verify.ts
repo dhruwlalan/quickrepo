@@ -1,12 +1,11 @@
-import { displayVerifyStoredToken } from '../main/token';
-import config from '../main/config';
+import { displayVerifyStoredToken, noTokenStored } from '../main/token';
 import catchAsync from '../utils/catchAsync';
 import { blueB, cyanB, log, whiteB } from '../utils/clogs';
 
 export const verifyStoredToken = catchAsync(async () => {
-   if (config.getToken() === '') {
-      log.warn('there is no stored token to verify');
-      log.hint('to add a new token, run the below command:', 'setup');
+   if (noTokenStored()) {
+      log.warn('you dont have a token stored in the app');
+      log.hint('to add a token, run the below command:', 'setup');
       process.exit(0);
    }
 

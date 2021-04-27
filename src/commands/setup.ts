@@ -1,8 +1,7 @@
-import { addToken, addNewToken } from '../main/token';
-import config from '../main/config';
+import { addToken, addNewToken, noTokenStored } from '../main/token';
 import catchAsync from '../utils/catchAsync';
 
 export const runSetup = catchAsync(async () => {
-   if (config.getToken() === '') await addToken();
+   if (noTokenStored()) await addToken();
    else await addNewToken();
 });
