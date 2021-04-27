@@ -3,34 +3,29 @@ import ora from 'ora';
 import execa from 'execa';
 
 import inquirer from '../main/inquirer';
-import config from '../main/config';
-import { verifyToken } from '../main/token';
+import { displayVerifyToken } from '../main/token';
 import info from '../utils/info';
 import hold from '../utils/hold';
 import { log, cyanB } from '../utils/clogs';
 
-export function isGitRepo() {
+export function isGitRepo(): boolean {
    if (info.isGitRepo) return true;
    return false;
 }
 
 export async function createOctokitInstance(): Promise<Octokit> {
-   const spinner = ora(cyanB('verifying stored token...'));
    try {
-      spinner.start();
-      const user = await verifyToken(config.getToken());
+      const user = await displayVerifyToken(true);
       if (!user) throw new Error('invalid token');
-      spinner.stop();
       return user.instance;
    } catch (e) {
-      spinner.stop();
       log.error('your stored token has become invalid, try adding a new one');
-      log.hint('to add a token you can run the below command:', 'add-token');
+      log.hint('to add a token you can run the below command:', 'setup');
       process.exit(1);
    }
 }
 
-export async function createRemoteRepository() {
+export async function createRemoteRepository(): Promise<string> {
    const spinner = ora(cyanB('creating remote repository...'));
    try {
       const octokit = await createOctokitInstance();
@@ -57,7 +52,7 @@ export async function createRemoteRepository() {
    }
 }
 
-export async function createLocalRepository(url: string) {
+export async function createLocalRepository(url: string): Promise<boolean> {
    const spinner = ora(cyanB('creating local repository...'));
    try {
       spinner.start();
@@ -74,7 +69,9 @@ export async function createLocalRepository(url: string) {
    }
 }
 
-export async function pushLocalRepositoryToRemote(commitMsg: string) {
+export async function pushLocalRepositoryToRemote(
+   commitMsg: string,
+): Promise<boolean> {
    const spinner = ora(cyanB('pushing local repository to remote...'));
    try {
       spinner.start();
@@ -113,5 +110,6 @@ export async function createRepository() {
    await createLocalRepository(sshUrl);
    await pushLocalRepositoryToRemote(initialCommitMessage);
 
+   log.success('created repository successfully!');
    process.exit(0);
 }

@@ -36,13 +36,14 @@ export async function verifyToken(token: string): Promise<User | false> {
 export async function displayVerifyToken(
    token: string | true,
 ): Promise<User | false> {
-   const spinner = ora().start();
+   const spinner = ora();
    let user: User | false;
+
    if (typeof token === 'string') {
-      spinner.text = cyanB('verifying token...');
+      spinner.start(cyanB('verifying token...'));
       user = await verifyToken(token);
    } else {
-      spinner.text = cyanB('verifying stored token...');
+      spinner.start(cyanB('verifying stored token...'));
       user = await verifyToken(config.getToken());
    }
    spinner.stop();
@@ -59,6 +60,7 @@ export async function addToken(newToken = false): Promise<boolean> {
       config.setToken(token);
       return true;
    }
+
    const user = await displayVerifyToken(true);
    if (!user) {
       const { token } = await inquirer.askAddToken();
