@@ -4,28 +4,24 @@ import execa from 'execa';
 
 import inquirer from '../main/inquirer';
 import config from '../main/config';
-import { log, cyanB } from '../utils/clogs';
+import { verifyToken } from '../main/token';
 import info from '../utils/info';
 import hold from '../utils/hold';
+import { log, cyanB } from '../utils/clogs';
 
 export function isGitRepo() {
-   if (info.isGitRepo) {
-      log.warn('current directory is already a git repository!');
-      return true;
-   }
+   if (info.isGitRepo) return true;
    return false;
 }
 
-export async function createOctokitInstance() {
+export async function createOctokitInstance(): Promise<Octokit> {
    const spinner = ora(cyanB('verifying stored token...'));
    try {
       spinner.start();
-      const octokit = new Octokit({ auth: config.getToken() });
-      const { data } = await octokit.request('/user');
-      if (!data) throw new Error('invalid token');
+      const user = await verifyToken(config.getToken());
+      if (!user) throw new Error('invalid token');
       spinner.stop();
-
-      return octokit;
+      return user.instance;
    } catch (e) {
       spinner.stop();
       log.error('your stored token has become invalid, try adding a new one');
@@ -35,37 +31,30 @@ export async function createOctokitInstance() {
 }
 
 export async function createRemoteRepository() {
-   // const spinner = ora(cyanB('creating remote repository...'));
-   // try {
-   //    const octokit = await createOctokitInstance();
-   //    const answers = await inquirer.askRemoteRepositoryDetails();
+   const spinner = ora(cyanB('creating remote repository...'));
+   try {
+      const octokit = await createOctokitInstance();
+      const answers = await inquirer.askRemoteRepositoryDetails();
 
-   //    spinner.start();
-   //    const { data } = await octokit.repos.createForAuthenticatedUser({
-   //       name: answers.name,
-   //       description: answers.description,
-   //       private: answers.visibility === 'private',
-   //    });
-   //    spinner.stop();
+      spinner.start();
+      const { data } = await octokit.repos.createForAuthenticatedUser({
+         name: answers.name,
+         description: answers.description,
+         private: answers.visibility === 'private',
+      });
+      spinner.stop();
 
-   //    return data.ssh_url;
-   // } catch (error) {
-   //    spinner.stop();
-   //    if (error.status === 422) {
-   //       log.error(`unable to create repository: name already exists!`);
-   //    } else {
-   //       log.error(`error code: ${error.status}`);
-   //       log.error(error.message);
-   //    }
-   //    process.exit(1);
-   // }
-
-   await createOctokitInstance();
-   await inquirer.askRemoteRepositoryDetails();
-   const spinner = ora(cyanB('creating remote repository...')).start();
-   await hold(2000);
-   spinner.stop();
-   return 'helloUrl';
+      return data.ssh_url;
+   } catch (error) {
+      spinner.stop();
+      if (error.status === 422) {
+         log.error(`unable to create repository: name already exists!`);
+      } else {
+         log.error(`error code: ${error.status}`);
+         log.error(error.message);
+      }
+      process.exit(1);
+   }
 }
 
 export async function createLocalRepository(url: string) {

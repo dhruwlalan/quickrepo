@@ -1,13 +1,14 @@
 import { Octokit } from '@octokit/rest';
 import ora from 'ora';
 
-import { cyanB, log } from '../utils/clogs';
+import { cyanB } from '../utils/clogs';
 import inquirer from './inquirer';
 import config from './config';
 
 interface User {
    username: string;
    githubUrl: string;
+   instance: Octokit;
 }
 
 export function noTokenStored() {
@@ -19,52 +20,60 @@ export async function verifyToken(token: string): Promise<User | false> {
    try {
       const octokit = new Octokit({ auth: token });
       const { data } = await octokit.request('/user');
-      if (data) return { username: data.login, githubUrl: data.html_url };
-      return false;
+
+      if (!data) return false;
+
+      return {
+         username: data.login,
+         githubUrl: data.html_url,
+         instance: octokit,
+      };
    } catch (error) {
       return false;
    }
 }
 
-export async function addToken(newToken = false): Promise<void> {
-   const { token } = await inquirer.askAddToken(newToken);
-   const user = await displayVerifyToken(token);
-   if (user) {
-      config.setToken(token);
-      log.success('token added successfully!');
-      process.exit(0);
+export async function displayVerifyToken(
+   token: string | true,
+): Promise<User | false> {
+   const spinner = ora().start();
+   let user: User | false;
+   if (typeof token === 'string') {
+      spinner.text = cyanB('verifying token...');
+      user = await verifyToken(token);
+   } else {
+      spinner.text = cyanB('verifying stored token...');
+      user = await verifyToken(config.getToken());
    }
-   process.exit(1);
-}
-export async function displayVerifyToken(token: string): Promise<User | false> {
-   const spinner = ora(cyanB('verifying token...')).start();
-   const user = await verifyToken(token);
    spinner.stop();
-   if (user) {
-      log.success('token is valid!');
-      return user;
-   }
-   log.error('token is invalid!');
+
+   if (user) return user;
    return false;
 }
 
-export async function addNewToken(): Promise<void> {
-   const user = await displayVerifyStoredToken();
-   if (!user) await addToken(true);
-   else {
-      const { addNewToken } = await inquirer.askConfirmAddNewToken();
-      if (!addNewToken) process.exit(0);
-      await addToken(true);
+export async function addToken(newToken = false): Promise<boolean> {
+   if (!newToken) {
+      const { token } = await inquirer.askAddToken();
+      const user = await displayVerifyToken(token);
+      if (!user) return false;
+      config.setToken(token);
+      return true;
    }
-}
-export async function displayVerifyStoredToken(): Promise<User | false> {
-   const spinner = ora(cyanB('verifying stored token...')).start();
-   const user = await verifyToken(config.getToken());
-   spinner.stop();
-   if (user) {
-      log.success('stored token is valid!');
-      return user;
+   const user = await displayVerifyToken(true);
+   if (!user) {
+      const { token } = await inquirer.askAddToken();
+      const user = await displayVerifyToken(token);
+      if (!user) return false;
+      config.setToken(token);
+      return true;
    }
-   log.error('stored token has become invalid!');
-   return false;
+
+   const { addNewToken } = await inquirer.askConfirmAddNewToken();
+   if (!addNewToken) process.exit(0);
+
+   const { token } = await inquirer.askAddToken(true);
+   const newUser = await displayVerifyToken(token);
+   if (!newUser) return false;
+   config.setToken(token);
+   return true;
 }

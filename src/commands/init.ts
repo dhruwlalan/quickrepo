@@ -10,7 +10,10 @@ export const createRepo = catchAsync(async () => {
       process.exit(0);
    }
 
-   if (isGitRepo()) process.exit(0);
+   if (isGitRepo()) {
+      log.warn('current directory is already a git repository');
+      process.exit(0);
+   }
 
    await createRepository();
 });
