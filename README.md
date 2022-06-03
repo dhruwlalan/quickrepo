@@ -1,21 +1,21 @@
-# quick-repository
+# quickrepo
 
 > A single command to quickly create a repository locally & also host it on github.
 
-[![NPM](https://img.shields.io/npm/l/quick-repository)](https://github.com/dhruwlalan/quick-repository/blob/master/LICENSE) [![npm](https://img.shields.io/npm/v/quick-repository)](https://www.npmjs.com/package/quick-repository) [![npm](https://img.shields.io/npm/dt/quick-repository)](https://www.npmjs.com/package/quick-repository)
+[![NPM](https://img.shields.io/npm/l/@dhruwlalan/quickrepo)](https://github.com/dhruwlalan/quickrepo/blob/master/LICENSE) [![npm](https://img.shields.io/npm/v/@dhruwlalan/quickrepo)](https://www.npmjs.com/package/quickrepo) [![npm](https://img.shields.io/npm/dt/@dhruwlalan/quickrepo)](https://www.npmjs.com/package/quickrepo)
 
 ## Why?
 
 Creating repository and hosting it on Github feels quite repetitive & contains quite a few steps _(initializing local repo → create new repo on Github → add remote → push to Github)_ if you are someone who creates a lot of repositories _(in this way)_.<br>
 
-With `quick-repository` all you have to do is just run the command `$ qr init`, enter remote repository details and **DONE**.<br>
+With `quickrepo` all you have to do is just run the command `$ qr init`, enter remote repository details and **DONE**.<br>
 
-`quick-repository` will create the local repository _(if it is already not a git repository or else it will just host it)_ , create the remote repository, add the remote, push to Github. _(It will also set the local branch to track the remote branch i.e up-stream branch)_ .
+`quickrepo` will create the local repository _(if it is already not a git repository or else it will just host it)_ , create the remote repository, add the remote, push to Github. _(It will also set the local branch to track the remote branch i.e up-stream branch)_ .
 
 ## Installation
 
 ```
-$ npm install -g quick-repository
+$ npm install -g @dhruwlalan/quickrepo
 ```
 
 ## Prerequisites
