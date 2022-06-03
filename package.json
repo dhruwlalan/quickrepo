@@ -58,6 +58,7 @@
       "@types/configstore": "^5.0.0",
       "@types/inquirer": "^7.3.1",
       "@types/node": "^15.0.1",
+      "@types/semantic-release": "^17.2.3",
       "@types/update-notifier": "^5.0.0",
       "@typescript-eslint/eslint-plugin": "^4.23.0",
       "@typescript-eslint/parser": "^4.23.0",
