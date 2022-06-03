@@ -1,5 +1,7 @@
 # Changelog
 
+## [1.1.1](https://github.com/dhruwlalan/quickrepo/compare/v1.1.0...v1.1.1) (2022-06-03)
+
 # [1.1.0](https://github.com/dhruwlalan/quickrepo/compare/v1.0.0...v1.1.0) (2022-06-03)
 
 
