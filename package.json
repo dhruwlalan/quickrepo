@@ -1,6 +1,6 @@
 {
    "name": "@dhruwlalan/quickrepo",
-   "version": "1.0.0",
+   "version": "1.1.0",
    "description": "A single command to quickly create a repository and host it on github.",
    "main": "lib/index.js",
    "bin": {
